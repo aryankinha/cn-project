@@ -8,8 +8,10 @@ Collected on Aryan Kinha's Mac on 5 October 2026. Names, enrollment numbers and 
 - [Full rerun](final-verification-2026-10-05.md): both DNS names/TTL 30, HTTPS B/A/B/A/B/A, TLS, HTTP/1.1, HTTP/2, api domain, direct backends, local inventory and ping. Edge ping had 50% loss in this two-packet sample; both backends had 0% loss.
 - [Latest root/cache checks](latest-root-cache-2026-10-05.md): default-trust HTTPS root 200, cache headers 200, ETag and conditional 304.
 - [Successful captured requests](last-capture-requests-2026-10-05.md): default-trust TLS 1.2 and TLS 1.3 requests returned 200 from B and A.
-- [Certificate and config checks](tls-artifact-verification.md): SANs, dates, fingerprint, matching key and local nginx syntax verification. The actual loaded remote nginx configuration has not been exported.
+- [Certificate and config checks](tls-artifact-verification.md): SANs, dates, fingerprint, matching key and local nginx syntax verification. The team subsequently supplied the edge config and the repository template was synchronized; an independent nginx -T export is unavailable.
 - [Negative probes](negative-probes-2026-10-05.md): public-resolver NXDOMAIN and closed-port refusal. These are diagnostic probes, not proof of all five controlled failure scenarios.
+
+[Updated edge configuration validation](nginx-config-update-2026-10-05.md) records the supplied configuration and successful local syntax check.
 
 ## Primary packet capture
 

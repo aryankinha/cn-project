@@ -22,7 +22,7 @@ Based on `CN_Project_Doc.pdf`, Sections 6 and 9 and Review 1 in Section 10. No s
 | F: Cache-Control and 304/cache hit | Live Cache-Control, ETag and conditional 304 verified |
 | G: DNS/TCP/TLS/ports/HTTP headers | Fresh DNS and complete edge TCP/TLS captures; four reviewed Wireshark screenshots included |
 | Section 6.3: Five failures + recovery | Wrong-resolver/closed-port probes saved; five controlled scenarios remain incomplete; [details](phase1-failure-tests.md) |
-| Configuration bundle | DNS config, nginx config, TLS notes, source and launch scripts included; obtain actual loaded nginx config after setup |
+| Configuration bundle | DNS config, nginx config, TLS notes, source and launch scripts included; team-supplied edge config included; independent nginx -T export unavailable |
 | Evidence folder | Fresh results separated from cloned reference evidence |
 | Structured live demonstration | [Commands](demo-commands.md) and [speaking script](phase1-video-script.md) |
 | Every member understands all components | Prepare DNS, TCP, TLS, HTTP, caching and load balancing explanations |

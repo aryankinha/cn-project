@@ -22,7 +22,7 @@ Both app.team.test and api.team.test resolve to Divyanshu's edge with TTL 30. A 
 | A: LAN | Aryan inventory: en0, 10.7.23.16/19, gateway 10.7.0.1, MAC 2e:a3:0c:b9:e7:1a. All three remote IPs answered ping. | Remote full inventory and remaining pairwise directions unverified. Edge two-packet sample had 50% loss. |
 | B: DNS | Both names return 10.7.20.249, TTL 30. Aryan's default local resolver works. DNS packet answer and TTL screenshots saved. | Default resolver evidence from at least two other Macs unverified. |
 | C: REST backends | Both `/` and `/api/status` return 200 directly on their LAN IPs with correct X-Backend A/B. | Confirms LAN accessibility; remote process/listener inventory not exported. |
-| D: nginx/load balancing | Six HTTPS requests returned B, A, B, A, B, A. Final smoke HTTP requests returned B, A, B, A, B. | Actual loaded remote nginx config not exported. |
+| D: nginx/load balancing | Six HTTPS requests returned B, A, B, A, B, A. Final smoke HTTP requests returned B, A, B, A, B. | Team supplied the edge configuration; independent nginx -T export unavailable. |
 | E: TLS | Plain HTTPS validates hostname/certificate without -k or explicit CA override on Aryan's Mac; TLS 1.2 and 1.3 return 200. | Browser and other client trust stores unverified. |
 | F: caching | `/api/cache` returns Cache-Control: public, max-age=60 and ETag: "cn-cache-v1"; matching If-None-Match returns 304. | A 304 is revalidation; no browser fresh-cache-hit claim. |
 | G: packet analysis | 58-packet final capture contains DNS, full edge TCP handshake, TLS 1.2 visible certificate/CCS, encrypted data and TLS 1.3. Four reviewed Wireshark screenshots included. HTTP headers saved in client logs. | HTTPS headers cannot be read from the encrypted capture without decryption. |
@@ -38,7 +38,7 @@ The generated self-signed RSA-2048/SHA-256 certificate covers both private names
 CB:36:4B:3F:99:C1:D3:57:B3:7E:D7:5B:5B:93:B8:70:94:8F:8E:59:21:3F:BB:01:44:7C:80:2A:8E:13:B0:79
 ```
 
-[Public certificate](../tls/edge.crt), [TLS setup](tls-setup.md) and [certificate/config verification](../evidence/phase1/tls-artifact-verification.md) are included. The matching private key is local, mode 600 and ignored by Git. The team installed the certificate on the edge; live HTTPS presents it. The prepared nginx template passed a local syntax check with substituted paths.
+[Public certificate](../tls/edge.crt), [TLS setup](tls-setup.md) and [certificate/config verification](../evidence/phase1/tls-artifact-verification.md) are included. The matching private key is local, mode 600 and ignored by Git. The team installed the certificate on the edge; live HTTPS presents it. The team subsequently supplied its edge configuration. The repository template now matches its HTTP/2 setting, TLS ciphers, HTTP/HTTPS server names and certificate paths on Divyanshu’s Mac. Independent nginx -T output remains unavailable.
 
 ## Evidence to open during review
 
@@ -62,3 +62,5 @@ The fourth screenshot, [DNS query/response](../evidence/phase1/screenshots/dns-q
 README, four-Mac architecture and diagram, team configuration, DNS guide/template, nginx TLS template, TLS setup guide, smoke test, demo commands, presentation script, runbook, requirement checklist, failure-test guide and evidence index now describe this team. Original cloned screenshots and logs remain clearly labeled under `evidence/reference-original/`; actual historical outputs are preserved unchanged.
 
 No remote-control credentials/session are configured for the other Macs, so remote-local inspection and stopping/restarting their backend processes could not be performed from here. Missing checks are explicitly marked rather than represented as completed. Phase II backup DNS, firewall isolation and migration remain outside this report.
+
+The synchronized configuration passed [local nginx validation](../evidence/phase1/nginx-config-update-2026-10-05.md) with certificate paths substituted for local inspection.

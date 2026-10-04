@@ -83,3 +83,7 @@ The client-to-edge HTTPS flow and A/B backend responses were verified in the fin
 | nginx | Application proxy | Round-robin, TLS termination; passive upstream failure handling | ALB / reverse proxy; not a configured CDN |
 
 The client only needs the edge address. nginx independently opens upstream TCP connections to the two backends. DNS and the edge are single points of failure in Phase I. `max_fails`/`fail_timeout` are passive failure handling, not active health probes. A failed backend may yield retries or errors depending on nginx configuration and request type; report measured results.
+
+## Edge configuration supplied by the team
+
+Divyanshu's Mac 2 hosts the nginx listener and TLS files. [The config](../nginx/nginx.conf.template) uses `/Users/divyanshusingh/Desktop/Private-Network-Service-Platform-/tls/edge.crt` and `edge.key`, HTTP/2 on the HTTPS listener, and TLS 1.2/1.3. HTTP port 80 declares app.team.test; HTTPS port 443 declares both app.team.test and api.team.test. Backend A is Mac 3 and Backend B is Mac 4; swapped Mac-number comments in the supplied snippet were corrected without changing the upstream IPs or ports.

@@ -1,14 +1,19 @@
-# Phase I project config: place inside nginx's existing http {} context.
-# Mac 2: Divyanshu Singh, 10.7.20.249.
-# Replace <EDGE_HOME> with his absolute home directory. Install tls files first.
-# Replace existing project definitions; do not duplicate upstream/server blocks.
+# Phase I nginx configuration supplied by the team for Mac 2.
+# Edge / reverse proxy / load balancer: Divyanshu Singh, 10.7.20.249.
+# Install inside the existing http {} context, e.g. Homebrew's servers include.
+# Certificate paths below are on Divyanshu's load-balancer Mac.
+# Replace existing project definitions to avoid duplicate upstream/server blocks.
+
 upstream backend_pool {
-    server 10.7.16.92:3001 max_fails=2 fail_timeout=10s; # Jatin Verma, Backend A
-    server 10.7.22.187:3002 max_fails=2 fail_timeout=10s; # Jatin Kumar Singh, Backend B
+    server 10.7.16.92:3001 max_fails=2 fail_timeout=10s; # Backend A, Mac 3: Jatin Verma
+    server 10.7.22.187:3002 max_fails=2 fail_timeout=10s; # Backend B, Mac 4: Jatin Kumar Singh
+    # Default strategy: round-robin.
 }
+
 server {
     listen 80;
-    server_name app.team.test api.team.test;
+    server_name app.team.test;
+
     location / {
         proxy_pass http://backend_pool;
         proxy_set_header Host $host;
@@ -17,19 +22,22 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 }
+
 server {
     listen 443 ssl;
+    http2 on;
     server_name app.team.test api.team.test;
-    ssl_certificate <EDGE_HOME>/cn-tls/edge.crt;
-    ssl_certificate_key <EDGE_HOME>/cn-tls/edge.key;
+
+    ssl_certificate     /Users/divyanshusingh/Desktop/Private-Network-Service-Platform-/tls/edge.crt;
+    ssl_certificate_key /Users/divyanshusingh/Desktop/Private-Network-Service-Platform-/tls/edge.key;
     ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+
     location / {
         proxy_pass http://backend_pool;
-        proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_next_upstream error timeout;
     }
 }

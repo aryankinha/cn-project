@@ -14,16 +14,14 @@ This follows the assignment's self-signed certificate option. There is no local 
 
 ## Install on Divyanshu's Mac
 
-Transfer `edge.crt` and `edge.key` directly to Mac 2 using a trusted local method. On Mac 2 place them in `~/cn-tls/`:
+The team supplied the updated configuration running on Divyanshu's load-balancer Mac. Its certificate directory is `/Users/divyanshusingh/Desktop/Private-Network-Service-Platform-/tls/`, replacing the earlier `~/cn-tls/` instructions.
 
 ```bash
-mkdir -p ~/cn-tls
-chmod 700 ~/cn-tls
-chmod 600 ~/cn-tls/edge.key
-openssl x509 -in ~/cn-tls/edge.crt -noout -subject -dates -ext subjectAltName -fingerprint -sha256
+chmod 600 /Users/divyanshusingh/Desktop/Private-Network-Service-Platform-/tls/edge.key
+openssl x509 -in /Users/divyanshusingh/Desktop/Private-Network-Service-Platform-/tls/edge.crt -noout -subject -dates -ext subjectAltName -fingerprint -sha256
 ```
 
-Use [the prepared nginx config](../nginx/nginx.conf.template) inside nginx's existing `http {}` context (a Homebrew servers include is commonly suitable). Replace both `<EDGE_HOME>` placeholders with Divyanshu's real absolute home directory. Preserve a copy of the currently working configuration and replace the existing project server/upstream definitions rather than duplicating them. Check the actual include location with `nginx -T`.
+[The repository nginx config](../nginx/nginx.conf.template) now matches the supplied configuration: HTTP on 80 for app.team.test; HTTPS on 443 for both names; HTTP/2 enabled; TLS 1.2/1.3; and both round-robin backends. The certificate paths refer to Divyanshu's Mac, not Aryan's Mac. Include these blocks inside nginx's existing `http {}` context, for example `/opt/homebrew/etc/nginx/servers/cn-project.conf`. Preserve a copy of the existing configuration and replace project definitions rather than duplicating them. `nginx -T` remains the way to independently export the actual loaded configuration.
 
 ```bash
 nginx -t
@@ -71,3 +69,5 @@ Regeneration changes the fingerprint and requires clients to trust the replaceme
 Plain curl and the final smoke test now succeed from Aryan's Mac using default certificate trust, with hostname validation enabled. The edge presents the team's certificate; TLS 1.2 and TLS 1.3 both work, with HTTP/2 negotiated. Earlier exit-60 logs are historical setup evidence. Browser trust and the other Macs' trust stores have not been independently checked.
 
 See [final smoke output](../evidence/phase1/latest-smoke-test-2026-10-05.md) and [successful captured requests](../evidence/phase1/last-capture-requests-2026-10-05.md).
+
+The synchronized configuration passed [local nginx validation](../evidence/phase1/nginx-config-update-2026-10-05.md) with certificate paths substituted for local inspection.
