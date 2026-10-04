@@ -1,58 +1,67 @@
 # Phase I evidence — current four-Mac team
 
-Collected on Aryan Kinha's Mac on 5 October 2026. Addresses and roles match the [architecture](../../docs/architecture.md). Original cloned evidence is separately labeled in [reference-original](../reference-original/README.md) and is not submission proof.
+Collected on Aryan Kinha's Mac on 5 October 2026. Names, enrollment numbers and roles match the [architecture](../../docs/architecture.md). See the [full results report](../../docs/phase1-results.md). Cloned evidence is preserved separately under [reference-original](../reference-original/README.md) and is not submission proof.
 
-## Latest HTTPS smoke test
+## Final successful results
 
-[Updated smoke-test results](https-smoke-test-2026-10-05.md): port 443 now works with the installed project certificate, TLS 1.3 and HTTP/2. Explicit certificate trust passes hostname validation and returns A/B responses. The default trust store still fails (exit 60); system/browser trust is pending. Earlier failures below are historical setup results.
+- [Final smoke test](latest-smoke-test-2026-10-05.md): DNS, five HTTP requests (B/A/B/A/B), HTTP headers, certificate-verified HTTPS and HTTPS headers; exit 0 using default client trust.
+- [Full rerun](final-verification-2026-10-05.md): both DNS names/TTL 30, HTTPS B/A/B/A/B/A, TLS, HTTP/1.1, HTTP/2, api domain, direct backends, local inventory and ping. Edge ping had 50% loss in this two-packet sample; both backends had 0% loss.
+- [Latest root/cache checks](latest-root-cache-2026-10-05.md): default-trust HTTPS root 200, cache headers 200, ETag and conditional 304.
+- [Successful captured requests](last-capture-requests-2026-10-05.md): default-trust TLS 1.2 and TLS 1.3 requests returned 200 from B and A.
+- [Certificate and config checks](tls-artifact-verification.md): SANs, dates, fingerprint, matching key and local nginx syntax verification. The actual loaded remote nginx configuration has not been exported.
+- [Negative probes](negative-probes-2026-10-05.md): public-resolver NXDOMAIN and closed-port refusal. These are diagnostic probes, not proof of all five controlled failure scenarios.
 
-## Actual command output
+## Primary packet capture
 
-- [Initial verification](live-verification-2026-10-05.md): both DNS names resolve with TTL 30, default local DNS is used, Backend A and Backend B return the correct identifiers, and Mac 1 can ping Macs 2–4. HTTPS failed before the edge listener was enabled.
-- [HTTPS retry](working-verification-2026-10-05.md): actual connection-refused results on port 443. The file's original title describes a retry session, not successful HTTPS evidence.
-- [HTTP and root endpoint checks](http-verification-2026-10-05.md): direct `/` endpoints return HTTP 200 from A and B. Subsequent edge HTTP requests timed out; no successful balancing/cache result is inferred from these attempts.
-- [Certificate/configuration verification](tls-artifact-verification.md): generated certificate's names, validity and fingerprint, matching private key, hostname verification, and local nginx configuration test.
+[phase1-final-flow.pcapng](phase1-final-flow.pcapng) contains 58 real packets: DNS, an established edge TCP/TLS 1.2 stream, and an established TLS 1.3 stream. Frame numbers below refer to this complete file. Simultaneous interface capture can interleave DNS and TCP observations; the client may also have a cached DNS answer.
 
-A single HTTP request through nginx on 80 returned HTTP 200 and X-Backend B during diagnosis. Later attempts timed out during setup. This is not proof of repeated A/B distribution or caching.
+| Full-file frames | Observation | Socket / detail |
+| --- | --- | --- |
+| 1 / 9 | DNS query/response, transaction 0xa7f5 | Aryan DNS port 53; app.team.test → 10.7.20.249, TTL 30 |
+| 10 / 12 | Loopback DNS query/response, transaction 0x0ca3 | 127.0.0.1; client and DNS run on the same Mac |
+| 2 / 3 / 4 | TCP SYN / SYN-ACK / ACK | 10.7.23.16:54008 ↔ 10.7.20.249:443, stream 0; relative Seq/Ack become 1/1 |
+| 5 | TLS 1.2 ClientHello | SNI app.team.test |
+| 8 | ServerHello, Certificate, ServerKeyExchange, ServerHelloDone | Visible certificate in a full TLS 1.2 handshake |
+| 13 / 15 | Client/server ChangeCipherSpec and encrypted handshake | Completion of TLS 1.2 handshake |
+| 16, 18, 19, 21, 23 | TLS 1.2 encrypted application records | HTTP headers are shown in curl logs, not read from ciphertext |
+| 27 / 31 / 32 | Second complete TCP handshake | Client port 54010, edge port 443, stream 1 |
+| 33 / 36 | ClientHello / TLS 1.3 ServerHello | Subsequent handshake messages, including certificate, are encrypted |
+| 43 / 44 / 47–49 | Retransmission and duplicate ACK observations | Retained as real transport evidence; do not infer a definitive cause |
 
-## Saved project-only captures
+Filters in the full file: `tcp.stream == 0`, `tcp.stream == 0 && tls`, `tcp.stream == 1`, and `dns.qry.name == "app.team.test"`. TLS 1.3 compatibility ChangeCipherSpec does not indicate key activation.
 
-- [Initial DNS and backend flow](phase1-project-initial.pcapng): 34 packets, including both private DNS names, unsuccessful edge HTTPS connections and successful direct backend connections. This is not a completed DNS→edge TCP→TLS→HTTP flow.
-- [HTTP retry capture](phase1-http-flow.pcapng): project DNS and attempted edge HTTP traffic during setup; inspect actual responses rather than assuming success.
+## Four reviewed Wireshark screenshots
 
-Unfiltered local captures are kept out of the submission bundle in the ignored `evidence/local-raw/` directory. Captures and screenshots were collected from real traffic; packet numbers below refer to the initial project-only file.
+Screenshots come from actual Wireshark windows and were visually inspected. Read filters reduce the opened packet set and renumber the displayed frames; use the full-file table above for primary capture frame references.
 
-## DNS packet analysis
+### DNS query and response
 
-| Frames | Query / response | Client / server | Result |
-| --- | --- | --- | --- |
-| 1 / 2 | app.team.test, transaction 0x78ef | 10.7.23.16:60237 → 10.7.23.16:53 and reverse | A = 10.7.20.249; TTL 30 |
-| 3 / 4 | api.team.test, transaction 0xda1f | Local query to Aryan's DNS | A = 10.7.20.249; TTL 30 |
-| 5 / 6 and 7 / 8 | app.team.test | Loopback 127.0.0.1 | Edge address returned |
+![DNS query and response](screenshots/dns-query-response.png)
 
-Filter: `dns.qry.name == "app.team.test"` or `dns.qry.name == "api.team.test"`. Local DNS is captured on lo0 because this client is also the DNS host. A remote-client capture or plain dig/scutil logs from the other Macs are still needed to substantiate their configured resolver behavior.
+### Expanded DNS answer and TTL
 
-![Current-team DNS query and response](screenshots/dns-query-response.png)
+![DNS answer, TTL 30 and edge IP](screenshots/dns-answer-details.png)
 
-The screenshot uses an app.team.test read filter, so Wireshark renumbers the reduced view; the first query/response pair still corresponds to frames 1/2 in the full saved project file. An expanded DNS answer/TTL screenshot remains to be saved; the actual TTL is available in the capture and dig output.
+Both DNS screenshots use [phase1-dns-edge-timeout.pcapng](phase1-dns-edge-timeout.pcapng), transaction 0x35b5, client port 63818. DNS succeeded during this session even though the edge connection subsequently timed out. These screenshots prove the DNS answer, not successful HTTPS from that earlier capture.
 
-## TCP packet analysis
+### Complete edge TCP handshake
 
-Backend A: frame 13 SYN, frame 14 SYN-ACK, frame 15 ACK. Socket pair: `10.7.23.16:53113` ↔ `10.7.16.92:3001`. Relative sequence/ACK numbers progress 0 → 1 during establishment; subsequent data is plain HTTP. Filter: `tcp.stream eq 2` in the initial project file.
+![Edge SYN, SYN-ACK and ACK](screenshots/tcp-three-way-handshake.png)
 
-![Backend A TCP three-way handshake](screenshots/tcp-backend-a-handshake.png)
+Read filter `tcp.stream == 0` in the primary final capture. Displayed first three frames correspond to full-file frames 2/3/4. Both endpoints, client source port 54008 and destination port 443 are visible.
 
-This screenshot uses a stream read filter; displayed frames 1/2/3 correspond to full-file frames 13/14/15. It proves a direct backend connection, not the still-pending edge HTTPS handshake.
+### TLS handshake and encrypted records
 
-The failed edge flow is frame 9 SYN then frame 10 RST-ACK, socket pair `10.7.23.16:53109` ↔ `10.7.20.249:443`. Frames 11/12 show the same refusal on 8443. No SYN-ACK/established connection or TLS handshake follows those attempts.
+![TLS ClientHello, certificate, ChangeCipherSpec and application records](screenshots/tls-stream-overview.png)
 
-## Remaining required evidence
+Read filter `tcp.stream == 0 && tls` in the primary capture. Visible ClientHello/SNI, ServerHello/Certificate, ChangeCipherSpec and encrypted application records correspond to full-file frames 5, 8, 13, 15 and subsequent records.
 
-- Full edge TCP SYN→SYN-ACK→ACK before a successful TLS handshake.
-- TLS ClientHello/ServerHello, certificate and ChangeCipherSpec where visible, plus encrypted application records. Use a fresh full TLS 1.2 handshake to show the visible certificate; a normal TLS 1.3 certificate is encrypted after ServerHello.
-- Trusted HTTPS by domain name without bypassing certificate verification; client trust-store/browser evidence.
-- Repeated edge responses with both backend identifiers; live Cache-Control and conditional 304/cache hit.
-- Remote LAN inventory and resolver logs, plus ping between every machine pair.
-- All five [controlled failure scenarios and recovery](../../docs/phase1-failure-tests.md).
+## Earlier setup and intermittent failures
 
-Use [the demo commands](../../docs/demo-commands.md) after [installing TLS](../../docs/tls-setup.md). Do not reuse the old team's screenshots or claim missing events from failed connections. Wireshark's automation intermittently lost its window during attempts to expand the DNS answer; the saved screenshots above were successfully captured and reviewed.
+[Initial checks](live-verification-2026-10-05.md), [early HTTPS retry](working-verification-2026-10-05.md), [HTTP checks](http-verification-2026-10-05.md), and [earlier certificate-trust smoke test](https-smoke-test-2026-10-05.md) document setup failures. The default trust failure in the earlier smoke log was resolved by the final run.
+
+[Captured attempts](captured-requests-2026-10-05.md), [TLS retry](tls-capture-retry-2026-10-05.md), and [failed smoke attempt](smoke-final-attempt-2026-10-05.md) preserve intermittent timeouts before final recovery. Associated older captures are `phase1-project-initial.pcapng`, `phase1-http-flow.pcapng`, `phase1-dns-edge-timeout.pcapng` and `phase1-tls-retry.pcapng`. The additional Backend A handshake screenshot is diagnostic evidence only. Unfiltered local captures are ignored under `evidence/local-raw/`.
+
+## Evidence still unavailable
+
+Full remote interface/prefix/gateway/MAC inventory; remaining all-pairs ping directions; default-resolver logs on at least two other Macs; browser/other-client certificate trust; the actual loaded edge config export; and complete five controlled failure demonstrations. This session has no authenticated remote control of the other Macs. Team confirmation is recorded separately from direct observation. The working service passes the final checks, while the full assignment evidence is incomplete.
