@@ -1,6 +1,6 @@
 # Phase I required failures — Section 6.3
 
-Status: pending coordinated execution. Complete after the baseline trusted HTTPS demo works. Keep original configuration copies, change one thing at a time, and restore immediately after recording each test. The PDF specifies these failures; it does not authorize silently changing other members' services.
+Status: baseline trusted HTTPS is verified, but the complete five-scenario demonstration remains unverified. The user authorized completing the tests; this session has no authenticated access to stop/restart the remote backend processes or inspect remote client settings. Keep original configuration copies, change one thing at a time, and restore immediately after recording each test.
 
 | Failure | Controlled action | Expected observation | Restoration / evidence |
 | --- | --- | --- | --- |
@@ -13,3 +13,7 @@ Status: pending coordinated execution. Complete after the baseline trusted HTTPS
 Use the terminal running each backend to stop it with Ctrl-C. Avoid killing unidentified processes. Keep nginx running for the backend failures. Do not use 443 as the deliberately wrong port until 443 has been proved working in the baseline.
 
 For every test store command output or screenshots, date/time, client identity, changed setting, measured result, layer explanation and recovery proof. A connection refusal found during setup is troubleshooting evidence, not proof of a deliberately performed failure with a healthy baseline.
+
+## Actual non-disruptive diagnostics collected
+
+[Saved negative probes](../evidence/phase1/negative-probes-2026-10-05.md) show a public resolver returning NXDOMAIN for the private name and TCP port 65534 refusing the connection. [Final baseline](../evidence/phase1/latest-smoke-test-2026-10-05.md) proves correct DNS/ports and HTTPS work afterward. These diagnostics do not demonstrate changing a client's DNS configuration, changing the served DNS record, stopping one backend, or stopping both backends. No controlled failure or recovery is claimed for those scenarios.

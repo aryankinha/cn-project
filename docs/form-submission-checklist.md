@@ -18,14 +18,16 @@ Based on `CN_Project_Doc.pdf`, Sections 6 and 9 and Review 1 in Section 10. No s
 | B: At least two other client resolver settings | Team-confirmed for all three; remote scutil/plain dig logs pending |
 | C: Two LAN-accessible backends and identifiers | Direct status responses verified on 3001/3002; root endpoint responses verified |
 | D: nginx and A/B load balancing | HTTP A/B alternation verified by latest smoke test; HTTPS A/B responses also observed |
-| E: Certificate / trusted HTTPS | Certificate installed; HTTPS verified with explicit certificate trust; default system/browser trust pending |
-| F: Cache-Control and 304/cache hit | Source implemented; collect live outputs |
-| G: DNS/TCP/TLS/ports/HTTP headers | Fresh DNS and backend TCP traffic captured; complete edge HTTPS flow pending |
-| Section 6.3: Five failures + recovery | [Coordinated plan](phase1-failure-tests.md); pending |
+| E: Certificate / trusted HTTPS | Certificate installed; plain HTTPS/default client trust verified on Aryan’s Mac; browser and other client trust unverified |
+| F: Cache-Control and 304/cache hit | Live Cache-Control, ETag and conditional 304 verified |
+| G: DNS/TCP/TLS/ports/HTTP headers | Fresh DNS and complete edge TCP/TLS captures; four reviewed Wireshark screenshots included |
+| Section 6.3: Five failures + recovery | Wrong-resolver/closed-port probes saved; five controlled scenarios remain incomplete; [details](phase1-failure-tests.md) |
 | Configuration bundle | DNS config, nginx config, TLS notes, source and launch scripts included; obtain actual loaded nginx config after setup |
 | Evidence folder | Fresh results separated from cloned reference evidence |
 | Structured live demonstration | [Commands](demo-commands.md) and [speaking script](phase1-video-script.md) |
 | Every member understands all components | Prepare DNS, TCP, TLS, HTTP, caching and load balancing explanations |
+
+See [full results and evidence links](phase1-results.md). Final smoke test passed; intermittent earlier LAN/edge timeouts are recorded.
 
 ## Review 1 marks
 

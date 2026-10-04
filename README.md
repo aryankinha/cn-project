@@ -15,6 +15,8 @@ Mac 1 and Mac 4 can act as clients without adding a fifth laptop. Divyanshu, Jat
 
 ## Architecture
 
+![Four-Mac architecture](docs/images/phase1-architecture.png)
+
 ```mermaid
 flowchart LR
     subgraph lan["Private LAN — four Macs"]
@@ -35,13 +37,15 @@ flowchart LR
 
 ## Verification status — 5 October 2026
 
-- Team-confirmed: all three other Macs use Aryan's DNS; four separate Macs run the four roles.
-- Verified from Aryan's Mac: both DNS names resolve to `10.7.20.249` with TTL 30; all other Macs answer ping; direct backends return HTTP 200 and their correct `X-Backend` identifiers.
-- After nginx was reloaded, the smoke test verified DNS, HTTP A/B distribution, and HTTPS on 443 using `HTTPS_CA_CERT=tls/edge.crt`. HTTPS negotiated TLS 1.3 and HTTP/2, with responses from both backends. The default client trust store still rejects the certificate; system/browser trust and remaining packet/cache evidence are pending.
-- The self-signed certificate for both DNS names is installed on the edge and validated with explicit certificate trust. Public certificate: `tls/edge.crt`; private key: `tls/edge.key` (ignored by Git). Client system trust is still pending.
-- Remote interface, MAC address, gateway/prefix, resolver output and all-pairs ping evidence still need collection on the other Macs. Controlled failure demonstrations remain pending.
+The final live smoke test passed with default client certificate trust and no insecure option. DNS, HTTP/HTTPS, A/B load balancing, cache headers and conditional 304 are verified from Aryan's Mac. Fresh Wireshark screenshots show DNS, the complete edge TCP handshake and a TLS 1.2 certificate/ChangeCipherSpec/encrypted application flow; the capture also contains TLS 1.3.
 
-Actual results are in [initial checks](evidence/phase1/live-verification-2026-10-05.md) and [HTTPS retry](evidence/phase1/working-verification-2026-10-05.md). Do not present expected output as a completed test.
+- Both names resolve to `10.7.20.249`, TTL 30. HTTP/1.1 and negotiated HTTP/2 both work.
+- Six HTTPS requests returned **B, A, B, A, B, A**. Both backends' `/` and `/api/status` endpoints returned 200.
+- Plain HTTPS validates the certificate and returns 200. Cache responses include `public, max-age=60`, ETag `"cn-cache-v1"`, and conditional 304.
+- All three remote Macs use Aryan's DNS according to the team. Their resolver logs, full interface inventory and remaining pairwise ping directions are unverified.
+- The five controlled failure demonstrations are not complete. Wrong-resolver and closed-port diagnostic probes are saved; backend stop/restart tests require remote service control, which is unavailable in this session.
+
+The working service is verified, but the full Phase I evidence checklist remains incomplete. The LAN/edge showed intermittent timeouts before the final successful run. See the [full results report](docs/phase1-results.md), [final smoke output](evidence/phase1/latest-smoke-test-2026-10-05.md), and [evidence index](evidence/phase1/README.md).
 
 ## Phase I requirements
 
@@ -69,10 +73,11 @@ curl -I https://app.team.test/api/cache
 curl -i -H 'If-None-Match: "cn-cache-v1"' https://app.team.test/api/cache
 ```
 
-These HTTPS commands are the target demonstration once TLS installation and trust are complete. HTTP/1.1 is required; HTTP/2 is optional if supported. HTTP/3 and email protocols are explanation-only.
+These HTTPS commands were verified from Aryan's Mac. HTTP/1.1 is required; HTTP/2 is optional if supported. HTTP/3 and email protocols are explanation-only.
 
 ## Files and evaluation
 
+- [Full Phase I results](docs/phase1-results.md)
 - [Architecture and inventory](docs/architecture.md)
 - [Configuration and troubleshooting runbook](docs/project-playbook-and-troubleshooting.md)
 - [TLS certificate installation](docs/tls-setup.md)
@@ -91,4 +96,4 @@ The source assignment is `CN_Project_Doc.pdf`, Sections 3, 4, 6, 9 and Review 1 
 HTTPS_CA_CERT=tls/edge.crt ./scripts/smoke-test.sh team.test
 ```
 
-The script checks DNS, existing HTTP requests, a verbose HTTPS request and HTTPS response headers. It exits on failures and prints success only after every request succeeds. [Latest smoke-test results](evidence/phase1/https-smoke-test-2026-10-05.md).
+The script checks DNS, existing HTTP requests, a verbose HTTPS request and HTTPS response headers. It exits on failures and prints success only after every request succeeds. [Latest smoke-test results](evidence/phase1/latest-smoke-test-2026-10-05.md).

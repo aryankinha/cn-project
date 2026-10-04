@@ -68,4 +68,6 @@ Regeneration changes the fingerprint and requires clients to trust the replaceme
 
 ## Latest live check — 5 October 2026
 
-The updated smoke test succeeds with `HTTPS_CA_CERT=tls/edge.crt`, using TLS 1.3 and HTTP/2 and verifying the domain against the certificate. The default client trust store currently fails with curl exit 60. Complete the client trust-store setup above for plain curl and the browser. See [saved output](../evidence/phase1/https-smoke-test-2026-10-05.md).
+Plain curl and the final smoke test now succeed from Aryan's Mac using default certificate trust, with hostname validation enabled. The edge presents the team's certificate; TLS 1.2 and TLS 1.3 both work, with HTTP/2 negotiated. Earlier exit-60 logs are historical setup evidence. Browser trust and the other Macs' trust stores have not been independently checked.
+
+See [final smoke output](../evidence/phase1/latest-smoke-test-2026-10-05.md) and [successful captured requests](../evidence/phase1/last-capture-requests-2026-10-05.md).

@@ -9,6 +9,8 @@
 
 ## Network topology
 
+![Four-Mac topology](images/phase1-architecture.png)
+
 ```mermaid
 flowchart LR
     subgraph lan["Private LAN — four Macs"]
@@ -65,7 +67,7 @@ sequenceDiagram
     Edge-->>Client: Encrypted HTTP response
 ```
 
-This sequence describes the intended HTTPS flow. Current verification status is tracked in the [evidence index](../evidence/phase1/README.md).
+The client-to-edge HTTPS flow and A/B backend responses were verified in the final rerun; the edge-to-backend path is defined by the supplied nginx configuration. Current verification status is tracked in the [evidence index](../evidence/phase1/README.md).
 
 ## Protocol and cloud-role map
 
