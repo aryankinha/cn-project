@@ -1,0 +1,12 @@
+# Mac 1: Aryan Kinha, 10.7.23.16. Both domains point to Divyanshu's edge.
+# Current-session configuration; recheck IPs after Wi-Fi reconnects.
+port=53
+domain-needed
+bogus-priv
+listen-address=127.0.0.1,10.7.23.16
+host-record=app.team.test,10.7.20.249,30
+host-record=api.team.test,10.7.20.249,30
+local-ttl=30
+no-resolv
+no-poll
+server=8.8.8.8

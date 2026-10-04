@@ -1,0 +1,18 @@
+# Local, machine-specific - never commit real IPs or certs
+team/team.env
+*.pem
+*.key
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Reference projects
+Computer-Network-Project/
+
+# Wireshark captures can be large - keep only the final chosen ones
+*.pcapng
+!evidence/**/*.pcapng
+
+# Local captures may contain unrelated traffic; submit filtered project captures.
+evidence/local-raw/
