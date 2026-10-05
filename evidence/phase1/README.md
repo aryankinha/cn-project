@@ -1,8 +1,12 @@
 # Phase I evidence — current four-Mac team
 
-Collected on Aryan Kinha's Mac on 5 October 2026. Names, enrollment numbers and roles match the [architecture](../../docs/architecture.md). See the [full results report](../../docs/phase1-results.md). Cloned evidence is preserved separately under [reference-original](../reference-original/README.md) and is not submission proof.
+Collected on Aryan Kinha's Mac on 5 October 2026. Names, enrollment numbers and roles match the [architecture](../../docs/architecture.md). See the [full results report](../../docs/phase1-results.md). Cloned evidence was removed during cleanup; only this team’s final captures, screenshots and actual text logs remain.
 
-## Final successful results
+## Later video-recording run
+
+The [new command/Wireshark video](../../video/README.md) records a later fresh command session. All three Macs answered ping and DNS resolved, but Backend B and edge HTTPS timed out; Backend A returned 200. [Actual command output](../../video/phase1-live-command-output.txt) and [timed terminal recording](../../video/phase1-live-terminal.cast) are preserved. The successful results below are the earlier baseline, not a claim that the later run succeeded.
+
+## Earlier successful baseline
 
 - [Final smoke test](latest-smoke-test-2026-10-05.md): DNS, five HTTP requests (B/A/B/A/B), HTTP headers, certificate-verified HTTPS and HTTPS headers; exit 0 using default client trust.
 - [Full rerun](final-verification-2026-10-05.md): both DNS names/TTL 30, HTTPS B/A/B/A/B/A, TLS, HTTP/1.1, HTTP/2, api domain, direct backends, local inventory and ping. Edge ping had 50% loss in this two-packet sample; both backends had 0% loss.
@@ -62,7 +66,7 @@ Read filter `tcp.stream == 0 && tls` in the primary capture. Visible ClientHello
 
 [Initial checks](live-verification-2026-10-05.md), [early HTTPS retry](working-verification-2026-10-05.md), [HTTP checks](http-verification-2026-10-05.md), and [earlier certificate-trust smoke test](https-smoke-test-2026-10-05.md) document setup failures. The default trust failure in the earlier smoke log was resolved by the final run.
 
-[Captured attempts](captured-requests-2026-10-05.md), [TLS retry](tls-capture-retry-2026-10-05.md), and [failed smoke attempt](smoke-final-attempt-2026-10-05.md) preserve intermittent timeouts before final recovery. Associated older captures are `phase1-project-initial.pcapng`, `phase1-http-flow.pcapng`, `phase1-dns-edge-timeout.pcapng` and `phase1-tls-retry.pcapng`. The additional Backend A handshake screenshot is diagnostic evidence only. Unfiltered local captures are ignored under `evidence/local-raw/`.
+[Captured attempts](captured-requests-2026-10-05.md), [TLS retry](tls-capture-retry-2026-10-05.md), and [failed smoke attempt](smoke-final-attempt-2026-10-05.md) preserve intermittent timeouts before final recovery. Superseded initial/HTTP/TLS-retry captures and the additional direct-backend screenshot were removed. `phase1-dns-edge-timeout.pcapng` is retained because it is the source of the two DNS screenshots. Unfiltered local captures were removed; future raw captures remain ignored by Git.
 
 ## Evidence still unavailable
 

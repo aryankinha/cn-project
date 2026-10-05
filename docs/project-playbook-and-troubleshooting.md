@@ -30,9 +30,9 @@ The backend launch script creates a virtual environment and installs Flask. Both
 
 ## Findings from this team's session
 
-On 5 October 2026 both names resolved correctly; all remote hosts answered ping and both backend status endpoints returned HTTP 200. Initial HTTPS timed out, followed by connection refusals on 443 and 8443, while HTTP on 80 worked. This isolated the observed problem to the edge HTTPS listener/reachability before any TLS handshake, not to private DNS or backend availability. A certificate and deployment configuration were prepared; installation still requires Mac 2.
+On 5 October 2026 both DNS names resolved correctly, all remote hosts answered ping and both backends returned HTTP 200. Initial HTTPS listener/trust failures and intermittent edge timeouts were followed by a successful final smoke test using default certificate trust, working A/B distribution, HTTP/2 and conditional 304. [The full results](phase1-results.md) distinguish the successful baseline from incomplete remote inventory/resolver/failure evidence.
 
-Previous-team post-mortems are not retained as claims about this team. Their old packet screenshots/logs are clearly labeled in the [reference archive](../evidence/reference-original/README.md).
+The nginx template matches the configuration supplied for Divyanshu's Mac, including its Desktop repository certificate paths. A local syntax check passed after substituting Aryan's certificate paths; this does not independently inspect the remote include layout. Cloned reference evidence was removed; actual current-team historical text logs remain in the evidence folder.
 
 ## Packet capture
 

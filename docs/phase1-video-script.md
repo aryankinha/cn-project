@@ -10,3 +10,9 @@ A structured speaking guide; the supplied assignment does not specify a five-min
 6. **All members: required failures.** Demonstrate all five Section 6.3 scenarios using the failure plan. Explain affected layers, measured outcomes and restoration. Backend failures leave DNS and the edge TLS endpoint separate from the application failure.
 
 Finish with each member prepared to answer questions about the entire request path. Backup DNS, isolation and edge migration are Phase II topics, not claimed Phase I results.
+
+## Command and Wireshark recording
+
+The replacement [5:00 video](../video/phase1-live-demo.mp4) uses playback of an actual timed command session and recordings of navigating the real Wireshark window. It contains subtitles and no audio. The earlier presentation-style video was removed.
+
+Fresh commands showed working DNS and ping, Backend A 200, but Backend B and edge HTTPS timeouts. The Wireshark walkthrough uses the earlier successful 02:53 capture and is labeled accordingly. Complete deliberate wrong-record and backend-stop/recovery recordings remain unavailable. See [video notes](../video/README.md) and [subtitle file](../video/phase1-live-subtitles.srt).

@@ -37,6 +37,8 @@ flowchart LR
 
 ## Verification status — 5 October 2026
 
+A later [video-recording run](video/README.md) found working DNS/ping and Backend A, but Backend B and edge HTTPS timed out. The successful results below describe the earlier baseline. Current healthy operation was not re-established in the later run.
+
 The final live smoke test passed with default client certificate trust and no insecure option. DNS, HTTP/HTTPS, A/B load balancing, cache headers and conditional 304 are verified from Aryan's Mac. Fresh Wireshark screenshots show DNS, the complete edge TCP handshake and a TLS 1.2 certificate/ChangeCipherSpec/encrypted application flow; the capture also contains TLS 1.3.
 
 - Both names resolve to `10.7.20.249`, TTL 30. HTTP/1.1 and negotiated HTTP/2 both work.
@@ -84,9 +86,10 @@ These HTTPS commands were verified from Aryan's Mac. HTTP/1.1 is required; HTTP/
 - [Demo commands](docs/demo-commands.md)
 - [Submission checklist mapped to the assignment](docs/form-submission-checklist.md)
 - [Team presentation script](docs/phase1-video-script.md)
+- [Silent subtitled video and recording notes](video/README.md)
 - [Evidence and screenshot guide](evidence/phase1/README.md)
 
-The source assignment is `CN_Project_Doc.pdf`, Sections 3, 4, 6, 9 and Review 1 in Section 10. Review 1 totals 50 marks: 40 for the team and 10 for individual viva. Old cloned screenshots/logs are preserved under `evidence/reference-original/` and are not this team's evidence. No five-minute video limit or specific submission form is imposed by the supplied PDF; confirm any additional faculty instructions separately.
+The source assignment is `CN_Project_Doc.pdf`, Sections 3, 4, 6, 9 and Review 1 in Section 10. Review 1 totals 50 marks: 40 for the team and 10 for individual viva. Old cloned screenshots/logs and superseded diagnostic captures were removed during the Phase I cleanup. Final team evidence and historical text logs are retained. No five-minute video limit or specific submission form is imposed by the supplied PDF; confirm any additional faculty instructions separately.
 
 ## Smoke test
 

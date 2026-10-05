@@ -59,8 +59,12 @@ The fourth screenshot, [DNS query/response](../evidence/phase1/screenshots/dns-q
 
 ## Documentation delivered
 
-README, four-Mac architecture and diagram, team configuration, DNS guide/template, nginx TLS template, TLS setup guide, smoke test, demo commands, presentation script, runbook, requirement checklist, failure-test guide and evidence index now describe this team. Original cloned screenshots and logs remain clearly labeled under `evidence/reference-original/`; actual historical outputs are preserved unchanged.
+README, four-Mac architecture and diagram, team configuration, DNS guide/template, nginx TLS template, TLS setup guide, smoke test, demo commands, presentation script, runbook, requirement checklist, failure-test guide and evidence index now describe this team. Original cloned screenshots/logs, unused placeholders and superseded diagnostic captures were removed during cleanup. Final captures, four required screenshots and actual historical text outputs are retained.
 
 No remote-control credentials/session are configured for the other Macs, so remote-local inspection and stopping/restarting their backend processes could not be performed from here. Missing checks are explicitly marked rather than represented as completed. Phase II backup DNS, firewall isolation and migration remain outside this report.
 
 The synchronized configuration passed [local nginx validation](../evidence/phase1/nginx-config-update-2026-10-05.md) with certificate paths substituted for local inspection.
+
+## Later command-recording run
+
+The [replacement five-minute video](../video/README.md) records fresh terminal commands and navigation of the earlier successful capture in Wireshark. In the fresh run, DNS and ping worked and Backend A returned 200, while Backend B and edge HTTPS timed out. Thus the earlier successful baseline above is preserved as historical evidence, but current healthy operation was not re-established during this recording. Complete controlled failure/recovery tests remain unverified.

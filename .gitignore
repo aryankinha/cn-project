@@ -16,3 +16,6 @@ Computer-Network-Project/
 
 # Local captures may contain unrelated traffic; submit filtered project captures.
 evidence/local-raw/
+
+# Video folder artifacts
+video/
