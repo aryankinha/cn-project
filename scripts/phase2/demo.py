@@ -175,7 +175,17 @@ def failover(lab):
     finally:
         scope(lab, "mac3", "start", "backend")
         scope(lab, "mac3", "health", "backend")
-        time.sleep(11)
+        reentry = time.monotonic() + 35
+        while time.monotonic() < reentry:
+            code, fields = headers(lab.https(lab.app, display=True))
+            require(code == 200 and fields.get("x-edge") == "edge1-mac2",
+                    "Request failed during the recovery observation")
+            if fields.get("x-backend") == "A":
+                print("Backend A rejoined the upstream pool")
+                break
+            time.sleep(1)
+        else:
+            raise RuntimeError("Backend A never rejoined the upstream pool")
         series(lab, "edge1-mac2")
     output = lab.on("mac2", ("tail", "-n", "22", lab.runtime("mac2") / "logs/nginx-access.log"))
     print(output.stdout)
