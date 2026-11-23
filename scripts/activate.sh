@@ -54,12 +54,26 @@ publish() {
     mv "$tmp" "$to"
 }
 
-restart_services() {
-    if has backend; then "$control" restart backend; fi
-    if has edge; then
-        if "$control" status edge; then "$control" reload edge; else "$control" start edge; fi
+changed() {
+    ! cmp -s "$backup/$1" "$home/$1"
+}
+
+activate_services() {
+    if has backend; then
+        if ! "$control" status backend; then "$control" start backend
+        elif changed backend/app.py || changed backend/requirements.txt; then "$control" restart backend
+        fi
     fi
-    if has dns; then "$control" restart dns; fi
+    if has edge; then
+        if ! "$control" status edge; then "$control" start edge
+        elif changed nginx/nginx.conf || changed nginx/cn-project.conf; then "$control" reload edge
+        fi
+    fi
+    if has dns; then
+        if ! "$control" status dns; then "$control" start dns
+        elif changed dnsmasq/dnsmasq.conf; then "$control" restart dns
+        fi
+    fi
     "$control" health
 }
 
@@ -114,7 +128,7 @@ case "$mode" in
             if [[ "$path" == dnsmasq/project.hosts && -e "$home/$path" ]]; then continue; fi
             publish "$stage/$path" "$home/$path"
         done
-        restart_services
+        activate_services
         echo "Activated $NODE using $stage"
         ;;
     rollback) rollback ;;
