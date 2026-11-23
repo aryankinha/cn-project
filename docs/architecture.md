@@ -1,4 +1,6 @@
-# Phase 2 architecture
+# Architecture and request flow
+
+![Four-Mac topology with both DNS and HTTPS paths](images/lab-topology.svg)
 
 `team/team.env` holds the live addresses, SSH usernames, subnet, gateway, active
 interface, ports, and upstream resolvers. The example inventory contains lab
@@ -12,23 +14,21 @@ for the November evidence and the local file for the current LAN values.
 | Mac 3 | Backend A, standby nginx | TCP 3001, TLS on TCP 443, HTTP redirect on 80 |
 | Mac 4 | Backend B, client | TCP 3002 |
 
+## One request through the lab
+
 ```mermaid
-flowchart LR
-  C[Client Macs]
-  D1[Mac 1 primary DNS]
-  D2[Mac 2 backup DNS]
-  E1[Mac 2 primary edge]
-  E2[Mac 3 standby edge]
-  A[Mac 3 Backend A]
-  B[Mac 4 Backend B]
-  C -->|DNS| D1
-  C -->|DNS| D2
-  C -->|HTTPS normally| E1
-  C -.->|HTTPS during app cutover| E2
-  E1 -->|HTTP 3001 LAN| A
-  E1 -->|HTTP 3002 LAN| B
-  E2 -->|HTTP 3001 loopback| A
-  E2 -->|HTTP 3002 LAN| B
+sequenceDiagram
+    participant Client as Client Mac
+    participant DNS as Team DNS (Mac 1 or 2)
+    participant Edge as Primary nginx (Mac 2)
+    participant Backend as Flask A or B
+    Client->>DNS: A query for app.team.test (UDP or TCP 53)
+    DNS-->>Client: Primary edge address (TTL 30 seconds)
+    Client->>Edge: TCP connection and TLS handshake (443)
+    Client->>Edge: Encrypted HTTP request for /api/status
+    Edge->>Backend: Plain HTTP (TCP 3001 or 3002)
+    Backend-->>Edge: HTTP 200 with X-Backend
+    Edge-->>Client: HTTPS response with X-Edge and X-Backend
 ```
 
 Both resolvers normally return the primary edge for `app.team.test` and
@@ -45,6 +45,30 @@ denial checks. Mac 2 remains a shared dependency for the primary edge and
 backup DNS. A DNS cutover needs both a reachable standby and time for old
 answers to expire.
 
-## Phase 1 archive
+## DNS cutover
 
-See the [October results](phase1-results.md) and [original architecture diagram](images/phase1-architecture.png) for the first deployment.
+```mermaid
+sequenceDiagram
+    participant Old as Client with cached answer
+    participant DNS as Both team DNS servers
+    participant New as Client with a fresh lookup
+    participant Primary as Primary edge (Mac 2)
+    participant Standby as Standby edge (Mac 3)
+    Note over DNS: Change only app.team.test to Mac 3
+    Old->>Primary: HTTPS via the cached Mac 2 address
+    New->>DNS: Fresh A query for app.team.test
+    DNS-->>New: Mac 3 address
+    New->>Standby: HTTPS to Mac 3
+    Note over Old,DNS: After expiry, the old client looks up the new address
+    Old->>Standby: HTTPS to Mac 3 after a fresh lookup
+```
+
+The rollback restores the app record to Mac 2 and verifies client convergence.
+The API record stays on Mac 2 throughout the drill.
+
+## Original Phase 1 topology
+
+![Original Phase 1 deployment with one DNS server and one nginx edge](images/phase1-architecture.png)
+
+The diagram shows the October addressing and roles. See the [Phase 1 results](phase1-results.md)
+for the original verification.

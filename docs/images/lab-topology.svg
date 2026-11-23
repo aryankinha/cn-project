@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="510" viewBox="0 0 1040 510" role="img" aria-labelledby="title description">
+  <title id="title">Four-Mac private network platform</title>
+  <desc id="description">Clients on Macs 1 and 4 query primary DNS on Mac 1 or backup DNS on Mac 2. The main HTTPS route goes to the primary edge on Mac 2. During a controlled app cutover, clients reach the standby edge on Mac 3. Both edges proxy requests to Backend A on Mac 3 and Backend B on Mac 4.</desc>
+  <defs>
+    <marker id="arrow-dns" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0L10 5 0 10z" fill="#007861"/>
+    </marker>
+    <marker id="arrow-edge" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0L10 5 0 10z" fill="#2856a7"/>
+    </marker>
+    <marker id="arrow-backend" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0L10 5 0 10z" fill="#576578"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="1038" height="508" rx="16" fill="#f7f9fc" stroke="#d8e0ec" stroke-width="2"/>
+  <g fill="#142337" font-family="system-ui, sans-serif">
+    <text x="36" y="46" font-size="24" font-weight="700">Four-Mac private network platform</text>
+    <text x="36" y="73" font-size="15" fill="#526277">app.team.test and api.team.test on the same LAN</text>
+  </g>
+  <g fill="none" stroke-width="2.5" stroke-linejoin="round">
+    <path d="M245 214 H279 V136 H345" stroke="#007861" marker-end="url(#arrow-dns)"/>
+    <path d="M245 230 H291 V214 H345" stroke="#007861" marker-end="url(#arrow-dns)"/>
+    <path d="M245 256 H291 V323 H345" stroke="#2856a7" marker-end="url(#arrow-edge)"/>
+    <path d="M245 274 H279 V415 H345" stroke="#2856a7" stroke-dasharray="7 5" marker-end="url(#arrow-edge)"/>
+    <path d="M604 324 H780" stroke="#576578" marker-end="url(#arrow-backend)"/>
+    <path d="M604 337 C679 337 711 401 780 401" stroke="#576578" marker-end="url(#arrow-backend)"/>
+    <path d="M604 400 C679 400 711 337 780 337" stroke="#576578" stroke-dasharray="7 5" marker-end="url(#arrow-backend)"/>
+    <path d="M604 418 H780" stroke="#576578" stroke-dasharray="7 5" marker-end="url(#arrow-backend)"/>
+  </g>
+  <g stroke-width="1.5">
+    <rect x="36" y="189" width="209" height="112" rx="10" fill="#fff" stroke="#a9b6c7"/>
+    <rect x="346" y="101" width="258" height="70" rx="10" fill="#ecf8f4" stroke="#73bda9"/>
+    <rect x="346" y="179" width="258" height="70" rx="10" fill="#ecf8f4" stroke="#73bda9"/>
+    <rect x="346" y="287" width="258" height="72" rx="10" fill="#edf3ff" stroke="#96b1df"/>
+    <rect x="346" y="379" width="258" height="72" rx="10" fill="#edf3ff" stroke="#96b1df"/>
+    <rect x="781" y="287" width="222" height="72" rx="10" fill="#fff" stroke="#a9b6c7"/>
+    <rect x="781" y="379" width="222" height="72" rx="10" fill="#fff" stroke="#a9b6c7"/>
+  </g>
+  <g fill="#142337" font-family="system-ui, sans-serif" font-weight="650" font-size="17">
+    <text x="53" y="222">Test clients</text>
+    <text x="363" y="128">Mac 1 · Primary DNS</text>
+    <text x="363" y="206">Mac 2 · Backup DNS</text>
+    <text x="363" y="316">Mac 2 · Primary nginx</text>
+    <text x="363" y="408">Mac 3 · Standby nginx</text>
+    <text x="798" y="316">Mac 3 · Backend A</text>
+    <text x="798" y="408">Mac 4 · Backend B</text>
+  </g>
+  <g fill="#465971" font-family="system-ui, sans-serif" font-size="14">
+    <text x="53" y="247">Mac 1 and Mac 4</text>
+    <text x="53" y="272">Resolve, then connect</text>
+    <text x="363" y="151">UDP/TCP 53 · TTL 30 seconds</text>
+    <text x="363" y="229">UDP/TCP 53 · Same records</text>
+    <text x="363" y="341">TCP 443 · Default HTTPS route</text>
+    <text x="363" y="433">TCP 443 · During app cutover</text>
+    <text x="798" y="341">Flask · HTTP on TCP 3001</text>
+    <text x="798" y="433">Flask · HTTP on TCP 3002</text>
+  </g>
+  <g fill="#465971" font-family="system-ui, sans-serif" font-size="13">
+    <path d="M38 482 H66" stroke="#007861" stroke-width="3"/><text x="75" y="487">DNS query</text>
+    <path d="M198 482 H226" stroke="#2856a7" stroke-width="3"/><text x="235" y="487">Client HTTPS</text>
+    <path d="M376 482 H404" stroke="#576578" stroke-width="3"/><text x="413" y="487">Upstream HTTP</text>
+    <path d="M576 482 H604" stroke="#576578" stroke-width="3" stroke-dasharray="7 5"/><text x="614" y="487">Standby path</text>
+  </g>
+</svg>

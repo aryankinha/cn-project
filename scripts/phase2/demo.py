@@ -17,11 +17,47 @@ from smoke import series, smoke
 
 STATE = ROOT / "team/.demo-state.json"
 
+# Guided command layout and concise output inspired by Antik's lab presenter:
+# https://github.com/antik1108/Private-Network-Service-Platform-/blob/93498242a2a2ec5a48056a097bb30dc4d3beff2f/scripts/demo.sh
+MENU = """Private Network Service Platform
+
+  present        Four-Mac roles, DNS, trusted HTTPS, backends and caching
+  who            Machine inventory and live service status
+  check          Full DNS, HTTPS and cache evidence
+  baseline       Include the full directed ping matrix
+
+  A              Backup DNS
+  B --flush      DNS TTL and cache flush (run sudo -v first)
+  C              Backend isolation (owners must apply the rules first)
+  D              Backend failover and recovery
+  E              DNS cutover to the standby edge and rollback
+  F              Troubleshooting rehearsal and recovery
+
+Run ./scripts/demo.sh <command>. See docs/demo-commands.md for the presentation order.
+"""
+
 
 def who(lab):
     for node in NODES:
         print(f"{node}: {lab.users[node]} @ {lab.ips[node]}")
         lab.node(node, "status", display=True)
+
+
+def present(lab):
+    print("1. Four-Mac topology")
+    roles = (
+        "primary DNS / controller",
+        "backup DNS / primary nginx",
+        "standby nginx / Backend A",
+        "Backend B / test client",
+    )
+    for node, role in zip(NODES, roles):
+        lab.node(node, "status")
+        print(f"  Mac {node[-1]}  {lab.ips[node]}  {role} [up]")
+
+    print("\n2. Resolve both names, connect over HTTPS and observe backend rotation")
+    smoke(lab, verbose=False)
+    print("\n3. Open docs/architecture.md and evidence/phase2/README.md for the packet walkthrough.")
 
 
 def baseline(lab):
@@ -309,16 +345,22 @@ class Tee(io.TextIOBase):
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=("who", "check", "baseline", "A", "B", "C", "D", "E", "F",
-                                           "break", "answer", "fix", "diagnose", "phase1", "phase1-client"))
+    parser = argparse.ArgumentParser(description=MENU, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument(
+        "command", nargs="?",
+        choices=("present", "who", "check", "baseline", "A", "B", "C", "D", "E", "F",
+                 "break", "answer", "fix", "diagnose", "phase1", "phase1-client"),
+    )
     parser.add_argument("--flush", action="store_true")
     parser.add_argument("--restored", action="store_true")
     parser.add_argument("--standby", action="store_true")
     parser.add_argument("--wrong-client", action="store_true")
     args = parser.parse_args()
+    if args.command is None:
+        print(MENU, end="")
+        return 0
     lab = Lab()
-    steps = {"who": who, "check": smoke, "baseline": baseline, "A": backup_dns,
+    steps = {"present": present, "who": who, "check": smoke, "baseline": baseline, "A": backup_dns,
              "B": lambda lab: ttl(lab, flush=args.flush),
              "C": lambda lab: isolation(lab, restored=args.restored, standby=args.standby), "D": failover,
              "E": cutover, "F": fault, "break": inject, "fix": recover,

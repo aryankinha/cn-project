@@ -65,7 +65,7 @@ project certificate’s trust entry if the owner later reverses that setup.
 
 ## Evaluation order
 
-1. Show the architecture and `./scripts/demo.sh who`.
+1. Show the [topology](architecture.md) and run `./scripts/demo.sh present` for the read-only walkthrough.
 2. Run `./scripts/demo.sh baseline` for inventory, directed pings, DNS, HTTPS,
    round robin and cache checks. Record any failed direction separately.
 3. Resolve the app name on a client and show the answering team resolver.
