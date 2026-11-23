@@ -15,11 +15,15 @@ backend_files=(backend/app.py backend/requirements.txt firewall/strict.pf firewa
 
 has() { [[ " $ROLES " == *" $1 "* ]]; }
 has dns && files+=("${dns_files[@]}")
-has edge && files+=("${edge_files[@]}")
+has edge && files+=("${edge_files[@]}" bin/edge-start.command)
 has backend && files+=("${backend_files[@]}")
 
 validate() {
     mkdir -p "$home"/{run,logs}
+    for path in "${files[@]}"; do
+        test -s "$stage/$path" || { echo "Staged file missing or empty: $path" >&2; return 1; }
+        case "$path" in bin/*) bash -n "$stage/$path" ;; esac
+    done
     if has dns; then dnsmasq --test --conf-file="$stage/dnsmasq/dnsmasq.conf"; fi
     if has edge; then
         test -r "$home/tls/edge.crt" && test -r "$home/tls/edge.key"
