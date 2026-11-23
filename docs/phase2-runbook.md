@@ -53,8 +53,15 @@ sudo "$HOME/cn-project/bin/client.sh" restore Wi-Fi
 Run only the apply line to configure a client. Use restore to undo it. Verify
 a regular lookup and HTTPS request before using a newly configured client in
 a drill. Review supplemental resolvers and VPN DNS separately. The script
-changes DNS settings and flushes caches. Certificate trust is a separate
-owner action if needed.
+changes DNS settings and flushes caches.
+
+Macs 2 and 3 failed the default-trust client probe. If using either as the
+additional course client, confirm the SHA-256 fingerprint of the public
+`edge.crt` against the [TLS evidence](../evidence/phase2/tls-verification.txt).
+Have the owner import that public certificate in Keychain Access and set
+trust for SSL, then verify both names with plain curl. Mac 3 already has
+the public certificate in `~/cn-project/tls/edge.crt`. Remove only the
+project certificate’s trust entry if the owner later reverses that setup.
 
 ## Evaluation order
 
