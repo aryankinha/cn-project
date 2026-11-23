@@ -1,0 +1,360 @@
+$ bash -s -- mac1-owner /Users/mac1-owner en0 10.7.6.56 10.7.0.1 dns
+Host mac1-owner | 27.2
+arm64
+	ether [local device address]
+	inet 10.7.6.56 netmask 0xffffe000 broadcast 10.7.31.255
+/opt/homebrew/bin/python3
+/opt/homebrew/bin/openssl
+/usr/bin/curl
+/usr/bin/dig
+/opt/homebrew/sbin/dnsmasq
+mac1 preflight passed
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac2-owner@10.7.6.63 'bash -s -- mac2-owner /Users/mac2-owner en0 10.7.6.63 10.7.0.1 dns edge'
+Host mac2-owner | 27.2
+arm64
+	ether [local device address]
+	inet 10.7.6.63 netmask 0xffffe000 broadcast 10.7.31.255
+/opt/homebrew/bin/python3
+/opt/homebrew/bin/openssl
+/usr/bin/curl
+/usr/bin/dig
+/opt/homebrew/sbin/dnsmasq
+/opt/homebrew/bin/nginx
+mac2 preflight passed
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac3-owner@10.7.6.79 'bash -s -- mac3-owner /Users/mac3-owner en0 10.7.6.79 10.7.0.1 edge backend'
+Host mac3-owner | 26.2
+arm64
+	ether [local device address]
+	inet 10.7.6.79 netmask 0xffffe000 broadcast 10.7.31.255
+/usr/local/bin/python3
+/opt/homebrew/bin/openssl
+/usr/bin/curl
+/usr/bin/dig
+/opt/homebrew/bin/nginx
+/sbin/pfctl
+mac3 preflight passed
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac4-owner@10.7.6.73 'bash -s -- mac4-owner /Users/mac4-owner en0 10.7.6.73 10.7.0.1 backend'
+Host mac4-owner | 27.2.1
+arm64
+	ether [local device address]
+	inet 10.7.6.73 netmask 0xffffe000 broadcast 10.7.31.255
+/usr/local/bin/python3
+/opt/homebrew/bin/openssl
+/usr/bin/curl
+/usr/bin/dig
+/sbin/pfctl
+mac4 preflight passed
+mac1 baseline saved to /Users/mac1-owner/Documents/Learn/CN project/cn-project/evidence/local-raw/ec69be92e1eb-20261123T190931Z/mac1.txt
+mac2 baseline saved to /Users/mac1-owner/Documents/Learn/CN project/cn-project/evidence/local-raw/ec69be92e1eb-20261123T190931Z/mac2.txt
+mac3 baseline saved to /Users/mac1-owner/Documents/Learn/CN project/cn-project/evidence/local-raw/ec69be92e1eb-20261123T190931Z/mac3.txt
+mac4 baseline saved to /Users/mac1-owner/Documents/Learn/CN project/cn-project/evidence/local-raw/ec69be92e1eb-20261123T190931Z/mac4.txt
+$ bash /Users/mac1-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/activate.sh validate /Users/mac1-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z
+dnsmasq: syntax check OK.
+$ scp -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no -r [temporary staging path]/cn-release-di12o5h3/mac2/bin [temporary staging path]/cn-release-di12o5h3/mac2/activate.sh [temporary staging path]/cn-release-di12o5h3/mac2/node.env [temporary staging path]/cn-release-di12o5h3/mac2/nginx [temporary staging path]/cn-release-di12o5h3/mac2/REVISION [temporary staging path]/cn-release-di12o5h3/mac2/dnsmasq mac2-owner@10.7.6.63:/Users/mac2-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac2-owner@10.7.6.63 'bash /Users/mac2-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/activate.sh validate /Users/mac2-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z'
+dnsmasq: syntax check OK.
+nginx: the configuration file /Users/mac2-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/nginx/validate.conf syntax is ok
+nginx: configuration file /Users/mac2-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/nginx/validate.conf test is successful
+$ scp -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no -r [temporary staging path]/cn-release-di12o5h3/mac3/bin [temporary staging path]/cn-release-di12o5h3/mac3/activate.sh [temporary staging path]/cn-release-di12o5h3/mac3/backend [temporary staging path]/cn-release-di12o5h3/mac3/node.env [temporary staging path]/cn-release-di12o5h3/mac3/firewall [temporary staging path]/cn-release-di12o5h3/mac3/nginx [temporary staging path]/cn-release-di12o5h3/mac3/REVISION mac3-owner@10.7.6.79:/Users/mac3-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac3-owner@10.7.6.79 'bash /Users/mac3-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/activate.sh validate /Users/mac3-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z'
+No broken requirements found.
+nginx: the configuration file /Users/mac3-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/nginx/validate.conf syntax is ok
+nginx: configuration file /Users/mac3-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/nginx/validate.conf test is successful
+pfctl: Use of -f option, could result in flushing of rules
+present in the main ruleset added by the system at startup.
+See /etc/pf.conf for further details.
+
+pfctl: Use of -f option, could result in flushing of rules
+present in the main ruleset added by the system at startup.
+See /etc/pf.conf for further details.
+
+$ scp -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no -r [temporary staging path]/cn-release-di12o5h3/mac4/bin [temporary staging path]/cn-release-di12o5h3/mac4/activate.sh [temporary staging path]/cn-release-di12o5h3/mac4/backend [temporary staging path]/cn-release-di12o5h3/mac4/node.env [temporary staging path]/cn-release-di12o5h3/mac4/firewall [temporary staging path]/cn-release-di12o5h3/mac4/REVISION mac4-owner@10.7.6.73:/Users/mac4-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac4-owner@10.7.6.73 'bash /Users/mac4-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/activate.sh validate /Users/mac4-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z'
+No broken requirements found.
+pfctl: Use of -f option, could result in flushing of rules
+present in the main ruleset added by the system at startup.
+See /etc/pf.conf for further details.
+
+pfctl: Use of -f option, could result in flushing of rules
+present in the main ruleset added by the system at startup.
+See /etc/pf.conf for further details.
+
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac4-owner@10.7.6.73 'bash /Users/mac4-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/activate.sh activate /Users/mac4-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z'
+No broken requirements found.
+mac4 backend up pid=14945
+mac4 backend up pid=14945
+mac4 backend up pid=14945
+X-Backend: B
+Activated mac4 using /Users/mac4-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z
+pfctl: Use of -f option, could result in flushing of rules
+present in the main ruleset added by the system at startup.
+See /etc/pf.conf for further details.
+
+pfctl: Use of -f option, could result in flushing of rules
+present in the main ruleset added by the system at startup.
+See /etc/pf.conf for further details.
+
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac3-owner@10.7.6.79 'bash /Users/mac3-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/activate.sh activate /Users/mac3-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z'
+No broken requirements found.
+mac3 edge up pid=7353
+mac3 backend up pid=10787
+mac3 backend up pid=10787
+mac3 edge up pid=7353
+mac3 edge up pid=7353
+edge edge2-mac3 ok
+mac3 backend up pid=10787
+X-Backend: A
+Activated mac3 using /Users/mac3-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z
+nginx: the configuration file /Users/mac3-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/nginx/validate.conf syntax is ok
+nginx: configuration file /Users/mac3-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/nginx/validate.conf test is successful
+pfctl: Use of -f option, could result in flushing of rules
+present in the main ruleset added by the system at startup.
+See /etc/pf.conf for further details.
+
+pfctl: Use of -f option, could result in flushing of rules
+present in the main ruleset added by the system at startup.
+See /etc/pf.conf for further details.
+
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac2-owner@10.7.6.63 'bash /Users/mac2-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/activate.sh activate /Users/mac2-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z'
+mac2 dns up pid=36148
+mac2 edge up pid=36283
+mac2 edge up pid=36283
+mac2 dns up pid=36148
+mac2 dns up pid=36148
+10.7.6.63
+mac2 edge up pid=36283
+edge edge1-mac2 ok
+Activated mac2 using /Users/mac2-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z
+dnsmasq: syntax check OK.
+nginx: the configuration file /Users/mac2-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/nginx/validate.conf syntax is ok
+nginx: configuration file /Users/mac2-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/nginx/validate.conf test is successful
+$ bash /Users/mac1-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z/activate.sh activate /Users/mac1-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z
+mac1 dns up pid=65850
+mac1 dns up pid=65850
+mac1 dns up pid=65850
+10.7.6.63
+Activated mac1 using /Users/mac1-owner/cn-project/releases/ec69be92e1eb-20261123T190931Z
+dnsmasq: syntax check OK.
+mac1 DNS UDP app.team.test: [(30, '10.7.6.63')]
+mac1 DNS TCP app.team.test: [(30, '10.7.6.63')]
+mac1 DNS UDP api.team.test: [(30, '10.7.6.63')]
+mac1 DNS TCP api.team.test: [(30, '10.7.6.63')]
+mac2 DNS UDP app.team.test: [(30, '10.7.6.63')]
+mac2 DNS TCP app.team.test: [(30, '10.7.6.63')]
+mac2 DNS UDP api.team.test: [(30, '10.7.6.63')]
+mac2 DNS TCP api.team.test: [(30, '10.7.6.63')]
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:45 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:45 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:46 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:46 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:46 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:47 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+edge1-mac2 backend series: A B A B A B
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:09:47 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:09:47 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:09:47 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:09:47 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:09:48 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:09:48 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+edge2-mac3 backend series: B A B A B A
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://api.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:48 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac4-owner@10.7.6.73 'curl --noproxy '"'"'*'"'"' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://api.team.test/api/status'
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:50 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' -sS --max-time 5 --resolve app.team.test:80:10.7.6.63 -D - -o /dev/null http://app.team.test/
+HTTP/1.1 301 Moved Permanently
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:50 GMT
+Content-Type: text/html
+Content-Length: 169
+Connection: keep-alive
+Location: https://app.team.test/
+
+$ curl --noproxy '*' -sS --max-time 5 --resolve api.team.test:80:10.7.6.63 -D - -o /dev/null http://api.team.test/
+HTTP/1.1 301 Moved Permanently
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:50 GMT
+Content-Type: text/html
+Content-Length: 169
+Connection: keep-alive
+Location: https://api.team.test/
+
+$ curl --noproxy '*' -sS --max-time 5 --resolve app.team.test:80:10.7.6.79 -D - -o /dev/null http://app.team.test/
+HTTP/1.1 301 Moved Permanently
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:09:50 GMT
+Content-Type: text/html
+Content-Length: 169
+Connection: keep-alive
+Location: https://app.team.test/
+
+$ curl --noproxy '*' -sS --max-time 5 --resolve api.team.test:80:10.7.6.79 -D - -o /dev/null http://api.team.test/
+HTTP/1.1 301 Moved Permanently
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:09:50 GMT
+Content-Type: text/html
+Content-Length: 169
+Connection: keep-alive
+Location: https://api.team.test/
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/cache
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:50 GMT
+Content-Type: application/json
+Content-Length: 74
+Connection: keep-alive
+X-Backend: A
+ETag: "cn-cache-v1"
+Cache-Control: public, max-age=60
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null -H 'If-None-Match: "cn-cache-v1"' https://app.team.test/api/cache
+HTTP/1.1 304 NOT MODIFIED
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:51 GMT
+Connection: keep-alive
+X-Backend: B
+ETag: "cn-cache-v1"
+Cache-Control: public, max-age=60
+X-Edge: edge1-mac2
+
+Release ec69be92e1eb-20261123T190931Z activated and verified on mac4, mac3, mac2, mac1

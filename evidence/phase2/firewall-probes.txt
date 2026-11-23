@@ -1,0 +1,22 @@
+2026-11-24 00:39:57 IST
+
+Mac 1 direct HTTP to 10.7.6.79:3001
+HTTP/1.1 200 OK
+Server: Werkzeug/3.1.9 Python/3.14.2
+Date: Mon, 23 Nov 2026 19:09:57 GMT
+Content-Type: application/json
+Content-Length: 70
+X-Backend: A
+Cache-Control: no-store
+Connection: close
+
+
+Mac 1 direct HTTP to 10.7.6.73:3002
+HTTP/1.1 200 OK
+Server: Werkzeug/3.1.9 Python/3.13.1
+Date: Mon, 23 Nov 2026 19:09:57 GMT
+Content-Type: application/json
+Content-Length: 70
+X-Backend: B
+Cache-Control: no-store
+Connection: close

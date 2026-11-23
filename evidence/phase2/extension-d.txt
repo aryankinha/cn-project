@@ -1,0 +1,366 @@
+2026-11-24T00:38:20.323886+05:30 | scenario=D
+D · Stop A and require every request to be served by B.
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:20 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:20 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:21 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:21 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:21 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:21 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+edge1-mac2 backend series: B A B A B A
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac3-owner@10.7.6.79 '/Users/mac3-owner/cn-project/bin/node.sh stop backend'
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:22 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:23 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:23 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:23 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:23 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:23 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:23 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:23 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+edge1-mac2 backend series: B B B B B B B B
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac3-owner@10.7.6.79 '/Users/mac3-owner/cn-project/bin/node.sh start backend'
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac3-owner@10.7.6.79 '/Users/mac3-owner/cn-project/bin/node.sh health backend'
+mac3 backend up pid=10787
+X-Backend: A
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:25 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:27 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:28 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:29 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:30 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:32 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:33 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:34 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:35 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:37 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+Backend A rejoined the upstream pool
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:37 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:37 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:37 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:37 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:38 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:08:38 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+edge1-mac2 backend series: B A B A B A
+10.7.6.56 [24/Nov/2026:00:38:23 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.043
+10.7.6.56 [24/Nov/2026:00:38:23 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.033
+10.7.6.56 [24/Nov/2026:00:38:23 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.028
+10.7.6.56 [24/Nov/2026:00:38:23 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.020
+10.7.6.56 [24/Nov/2026:00:38:23 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.109
+10.7.6.56 [24/Nov/2026:00:38:23 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.026
+10.7.6.56 [24/Nov/2026:00:38:25 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.206
+10.7.6.56 [24/Nov/2026:00:38:27 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.137
+10.7.6.56 [24/Nov/2026:00:38:28 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.051
+10.7.6.56 [24/Nov/2026:00:38:29 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.036
+10.7.6.56 [24/Nov/2026:00:38:30 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.159
+10.7.6.56 [24/Nov/2026:00:38:32 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.152
+10.7.6.56 [24/Nov/2026:00:38:33 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.113
+10.7.6.56 [24/Nov/2026:00:38:34 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.125
+10.7.6.56 [24/Nov/2026:00:38:35 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.134
+10.7.6.56 [24/Nov/2026:00:38:37 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.79:3001 upstream_status=200 rt=0.077
+10.7.6.56 [24/Nov/2026:00:38:37 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.122
+10.7.6.56 [24/Nov/2026:00:38:37 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.79:3001 upstream_status=200 rt=0.035
+10.7.6.56 [24/Nov/2026:00:38:37 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.040
+10.7.6.56 [24/Nov/2026:00:38:38 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.79:3001 upstream_status=200 rt=0.100
+10.7.6.56 [24/Nov/2026:00:38:38 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.73:3002 upstream_status=200 rt=0.060
+10.7.6.56 [24/Nov/2026:00:38:38 +0530] "GET /api/status HTTP/1.1" status=200 edge=edge1-mac2 upstream=10.7.6.79:3001 upstream_status=200 rt=0.036
+
+Evidence: /Users/mac1-owner/Documents/Learn/CN project/cn-project/evidence/phase2/20261124-003820-323748+0530-D.log
+Requested checks passed

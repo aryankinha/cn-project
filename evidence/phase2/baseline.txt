@@ -1,0 +1,308 @@
+2026-11-24T00:38:40.067041+05:30 | scenario=baseline
+mac1: mac1-owner @ 10.7.6.56
+$ /Users/mac1-owner/cn-project/bin/node.sh status
+mac1 dns up pid=65850
+mac2: mac2-owner @ 10.7.6.63
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac2-owner@10.7.6.63 '/Users/mac2-owner/cn-project/bin/node.sh status'
+mac2 dns up pid=36148
+mac2 edge up pid=36283
+mac3: mac3-owner @ 10.7.6.79
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac3-owner@10.7.6.79 '/Users/mac3-owner/cn-project/bin/node.sh status'
+mac3 edge up pid=7353
+mac3 backend up pid=10787
+mac4: mac4-owner @ 10.7.6.73
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac4-owner@10.7.6.73 '/Users/mac4-owner/cn-project/bin/node.sh status'
+mac4 backend up pid=14945
+$ ifconfig en0
+en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+	options=6460<TSO4,TSO6,CHANNEL_IO,PARTIAL_CSUM,ZEROINVERT_CSUM>
+	ether [local device address]
+	inet6 [local link address]
+	inet 10.7.6.56 netmask 0xffffe000 broadcast 10.7.31.255
+	nd6 options=201<PERFORMNUD,DAD>
+	media: autoselect
+	status: active
+$ ping -q -c 2 -t 4 10.7.6.63
+PING 10.7.6.63 (10.7.6.63): 56 data bytes
+
+--- 10.7.6.63 ping statistics ---
+2 packets transmitted, 2 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 26.402/45.812/65.222/19.410 ms
+$ ping -q -c 2 -t 4 10.7.6.79
+PING 10.7.6.79 (10.7.6.79): 56 data bytes
+
+--- 10.7.6.79 ping statistics ---
+2 packets transmitted, 2 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 6.433/40.590/74.746/34.156 ms
+$ ping -q -c 2 -t 4 10.7.6.73
+PING 10.7.6.73 (10.7.6.73): 56 data bytes
+
+--- 10.7.6.73 ping statistics ---
+2 packets transmitted, 2 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 52.434/121.802/191.171/69.368 ms
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac2-owner@10.7.6.63 'ifconfig en0'
+en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+	options=6460<TSO4,TSO6,CHANNEL_IO,PARTIAL_CSUM,ZEROINVERT_CSUM>
+	ether [local device address]
+	inet6 [local link address]
+	inet 10.7.6.63 netmask 0xffffe000 broadcast 10.7.31.255
+	nd6 options=201<PERFORMNUD,DAD>
+	media: autoselect
+	status: active
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac2-owner@10.7.6.63 'ping -q -c 2 -t 4 10.7.6.56'
+PING 10.7.6.56 (10.7.6.56): 56 data bytes
+
+--- 10.7.6.56 ping statistics ---
+2 packets transmitted, 0 packets received, 100.0% packet loss
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac2-owner@10.7.6.63 'ping -q -c 2 -t 4 10.7.6.79'
+PING 10.7.6.79 (10.7.6.79): 56 data bytes
+
+--- 10.7.6.79 ping statistics ---
+2 packets transmitted, 2 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 24.565/72.250/119.935/47.685 ms
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac2-owner@10.7.6.63 'ping -q -c 2 -t 4 10.7.6.73'
+PING 10.7.6.73 (10.7.6.73): 56 data bytes
+
+--- 10.7.6.73 ping statistics ---
+2 packets transmitted, 2 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 29.103/36.808/44.513/7.705 ms
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac3-owner@10.7.6.79 'ifconfig en0'
+en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+	options=6460<TSO4,TSO6,CHANNEL_IO,PARTIAL_CSUM,ZEROINVERT_CSUM>
+	ether [local device address]
+	inet6 [local link address]
+	inet 10.7.6.79 netmask 0xffffe000 broadcast 10.7.31.255
+	nd6 options=201<PERFORMNUD,DAD>
+	media: autoselect
+	status: active
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac3-owner@10.7.6.79 'ping -q -c 2 -t 4 10.7.6.56'
+PING 10.7.6.56 (10.7.6.56): 56 data bytes
+
+--- 10.7.6.56 ping statistics ---
+2 packets transmitted, 0 packets received, 100.0% packet loss
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac3-owner@10.7.6.79 'ping -q -c 2 -t 4 10.7.6.63'
+PING 10.7.6.63 (10.7.6.63): 56 data bytes
+
+--- 10.7.6.63 ping statistics ---
+2 packets transmitted, 2 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 7.144/27.249/47.354/20.105 ms
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac3-owner@10.7.6.79 'ping -q -c 2 -t 4 10.7.6.73'
+PING 10.7.6.73 (10.7.6.73): 56 data bytes
+
+--- 10.7.6.73 ping statistics ---
+2 packets transmitted, 2 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 22.588/63.853/105.118/41.265 ms
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac4-owner@10.7.6.73 'ifconfig en0'
+en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+	options=6460<TSO4,TSO6,CHANNEL_IO,PARTIAL_CSUM,ZEROINVERT_CSUM>
+	ether [local device address]
+	inet6 [local link address]
+	inet 10.7.6.73 netmask 0xffffe000 broadcast 10.7.31.255
+	nd6 options=201<PERFORMNUD,DAD>
+	media: autoselect
+	status: active
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac4-owner@10.7.6.73 'ping -q -c 2 -t 4 10.7.6.56'
+PING 10.7.6.56 (10.7.6.56): 56 data bytes
+
+--- 10.7.6.56 ping statistics ---
+2 packets transmitted, 0 packets received, 100.0% packet loss
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac4-owner@10.7.6.73 'ping -q -c 2 -t 4 10.7.6.63'
+PING 10.7.6.63 (10.7.6.63): 56 data bytes
+
+--- 10.7.6.63 ping statistics ---
+2 packets transmitted, 2 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 9.841/12.287/14.732/2.445 ms
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac4-owner@10.7.6.73 'ping -q -c 2 -t 4 10.7.6.79'
+PING 10.7.6.79 (10.7.6.79): 56 data bytes
+
+--- 10.7.6.79 ping statistics ---
+2 packets transmitted, 2 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 346.980/371.323/395.667/24.344 ms
+mac1 DNS UDP app.team.test: [(30, '10.7.6.63')]
+mac1 DNS TCP app.team.test: [(30, '10.7.6.63')]
+mac1 DNS UDP api.team.test: [(30, '10.7.6.63')]
+mac1 DNS TCP api.team.test: [(30, '10.7.6.63')]
+mac2 DNS UDP app.team.test: [(30, '10.7.6.63')]
+mac2 DNS TCP app.team.test: [(30, '10.7.6.63')]
+mac2 DNS UDP api.team.test: [(30, '10.7.6.63')]
+mac2 DNS TCP api.team.test: [(30, '10.7.6.63')]
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:11 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:11 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:12 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:12 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:13 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:14 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+edge1-mac2 backend series: B A B A B A
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:09:15 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:09:15 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:09:15 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:09:15 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:09:15 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:09:16 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+edge2-mac3 backend series: B A B A B A
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://api.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:16 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac4-owner@10.7.6.73 'curl --noproxy '"'"'*'"'"' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://api.team.test/api/status'
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:17 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/cache
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:18 GMT
+Content-Type: application/json
+Content-Length: 74
+Connection: keep-alive
+X-Backend: B
+ETag: "cn-cache-v1"
+Cache-Control: public, max-age=60
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null -H 'If-None-Match: "cn-cache-v1"' https://app.team.test/api/cache
+HTTP/1.1 304 NOT MODIFIED
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:09:19 GMT
+Connection: keep-alive
+X-Backend: A
+ETag: "cn-cache-v1"
+Cache-Control: public, max-age=60
+X-Edge: edge1-mac2
+
+INCOMPLETE: Pairwise ping failed: mac2 → mac1, mac3 → mac1, mac4 → mac1
+Evidence: /Users/mac1-owner/Documents/Learn/CN project/cn-project/evidence/phase2/20261124-003840-066907+0530-baseline.log

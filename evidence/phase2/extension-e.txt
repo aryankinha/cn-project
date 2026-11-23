@@ -1,0 +1,249 @@
+2026-11-24T00:34:55.929548+05:30 | scenario=E
+E · Route fresh app lookups to Mac 3 while Mac 1 still has the primary answer.
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:04:56 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:04:57 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:04:57 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:04:57 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:04:58 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:04:58 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+edge2-mac3 backend series: B A B A B A
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.63
+
+$ bash -c '
+set -eu
+file="$HOME/cn-project/dnsmasq/project.hosts"
+tmp="$(mktemp "$file.XXXXXX")"
+cat > "$tmp"
+mv "$tmp" "$file"
+"$HOME/cn-project/bin/node.sh" reload dns
+'
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac2-owner@10.7.6.63 'bash -c '"'"'
+set -eu
+file="$HOME/cn-project/dnsmasq/project.hosts"
+tmp="$(mktemp "$file.XXXXXX")"
+cat > "$tmp"
+mv "$tmp" "$file"
+"$HOME/cn-project/bin/node.sh" reload dns
+'"'"''
+mac1: app.team.test [(30, '10.7.6.79')]
+mac1: api.team.test [(30, '10.7.6.63')]
+mac2: app.team.test [(30, '10.7.6.79')]
+mac2: api.team.test [(30, '10.7.6.63')]
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:05:33 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac4-owner@10.7.6.73 'curl --noproxy '"'"'*'"'"' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status'
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:05:34 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.79
+
+mac1 +0.0s system answer: 10.7.6.79
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:05:34 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ bash -c '
+set -eu
+file="$HOME/cn-project/dnsmasq/project.hosts"
+tmp="$(mktemp "$file.XXXXXX")"
+cat > "$tmp"
+mv "$tmp" "$file"
+"$HOME/cn-project/bin/node.sh" reload dns
+'
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac2-owner@10.7.6.63 'bash -c '"'"'
+set -eu
+file="$HOME/cn-project/dnsmasq/project.hosts"
+tmp="$(mktemp "$file.XXXXXX")"
+cat > "$tmp"
+mv "$tmp" "$file"
+"$HOME/cn-project/bin/node.sh" reload dns
+'"'"''
+mac1: app.team.test [(30, '10.7.6.63')]
+mac1: api.team.test [(30, '10.7.6.63')]
+mac2: app.team.test [(30, '10.7.6.63')]
+mac2: api.team.test [(30, '10.7.6.63')]
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.79
+
+mac1 +0.0s system answer: 10.7.6.79
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.79
+
+mac1 +2.0s system answer: 10.7.6.79
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.79
+
+mac1 +4.1s system answer: 10.7.6.79
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.79
+
+mac1 +6.1s system answer: 10.7.6.79
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.79
+
+mac1 +8.1s system answer: 10.7.6.79
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.79
+
+mac1 +10.1s system answer: 10.7.6.79
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.79
+
+mac1 +12.2s system answer: 10.7.6.79
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.79
+
+mac1 +14.2s system answer: 10.7.6.79
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.79
+
+mac1 +16.2s system answer: 10.7.6.79
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.79
+
+mac1 +18.2s system answer: 10.7.6.79
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.79
+
+mac1 +20.2s system answer: 10.7.6.79
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.79
+
+mac1 +22.3s system answer: 10.7.6.79
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.79
+
+mac1 +24.3s system answer: 10.7.6.79
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.79
+
+mac1 +26.3s system answer: 10.7.6.79
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.79
+
+mac1 +28.3s system answer: 10.7.6.79
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.79
+
+mac1 +30.4s system answer: 10.7.6.79
+$ dscacheutil -q host -a name app.team.test
+name: app.team.test
+ip_address: 10.7.6.63
+
+mac1 +32.4s system answer: 10.7.6.63
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:06:13 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+Evidence: /Users/mac1-owner/Documents/Learn/CN project/cn-project/evidence/phase2/20261124-003455-929364+0530-E.log
+Requested checks passed

@@ -1,0 +1,8 @@
+2026-11-24 00:40:46 IST
+PING 10.7.6.56 (10.7.6.56): 56 data bytes
+Request timeout for icmp_seq 0
+
+--- 10.7.6.56 ping statistics ---
+2 packets transmitted, 0 packets received, 100.0% packet loss
+Firewall stealth mode is on
+Firewall is enabled. (State = 1)

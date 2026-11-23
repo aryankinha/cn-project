@@ -1,0 +1,47 @@
+2026-11-24 00:35:52 IST
+
+TLS peer app.team.test on 10.7.6.63
+*  expire date: Nov 23 17:47:27 2027 GMT
+*  subjectAltName: host "app.team.test" matched cert's "app.team.test"
+*  issuer: CN=app.team.test
+*  SSL certificate verify ok.
+< HTTP/1.1 200 OK
+< X-Edge: edge1-mac2
+
+TLS peer api.team.test on 10.7.6.63
+*  expire date: Nov 23 17:47:27 2027 GMT
+*  subjectAltName: host "api.team.test" matched cert's "api.team.test"
+*  issuer: CN=app.team.test
+*  SSL certificate verify ok.
+< HTTP/1.1 200 OK
+< X-Edge: edge1-mac2
+
+Certificate metadata from 10.7.6.63
+sha256 Fingerprint=35:80:A2:59:BB:BB:EC:7C:53:24:7B:8B:BF:5A:A6:27:3F:78:3F:62:86:62:1E:6A:D5:B2:9C:FA:8C:E8:93:73
+notBefore=Nov 23 17:47:27 2026 GMT
+notAfter=Nov 23 17:47:27 2027 GMT
+X509v3 Subject Alternative Name:
+    DNS:app.team.test, DNS:api.team.test
+
+TLS peer app.team.test on 10.7.6.79
+*  expire date: Nov 23 17:47:27 2027 GMT
+*  subjectAltName: host "app.team.test" matched cert's "app.team.test"
+*  issuer: CN=app.team.test
+*  SSL certificate verify ok.
+< HTTP/1.1 200 OK
+< X-Edge: edge2-mac3
+
+TLS peer api.team.test on 10.7.6.79
+*  expire date: Nov 23 17:47:27 2027 GMT
+*  subjectAltName: host "api.team.test" matched cert's "api.team.test"
+*  issuer: CN=app.team.test
+*  SSL certificate verify ok.
+< HTTP/1.1 200 OK
+< X-Edge: edge2-mac3
+
+Certificate metadata from 10.7.6.79
+sha256 Fingerprint=35:80:A2:59:BB:BB:EC:7C:53:24:7B:8B:BF:5A:A6:27:3F:78:3F:62:86:62:1E:6A:D5:B2:9C:FA:8C:E8:93:73
+notBefore=Nov 23 17:47:27 2026 GMT
+notAfter=Nov 23 17:47:27 2027 GMT
+X509v3 Subject Alternative Name:
+    DNS:app.team.test, DNS:api.team.test

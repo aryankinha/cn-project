@@ -1,0 +1,225 @@
+2026-11-24T00:40:36.688876+05:30 | scenario=check
+mac1 DNS UDP app.team.test: [(30, '10.7.6.63')]
+mac1 DNS TCP app.team.test: [(30, '10.7.6.63')]
+mac1 DNS UDP api.team.test: [(30, '10.7.6.63')]
+mac1 DNS TCP api.team.test: [(30, '10.7.6.63')]
+mac2 DNS UDP app.team.test: [(30, '10.7.6.63')]
+mac2 DNS TCP app.team.test: [(30, '10.7.6.63')]
+mac2 DNS UDP api.team.test: [(30, '10.7.6.63')]
+mac2 DNS TCP api.team.test: [(30, '10.7.6.63')]
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:10:36 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:10:37 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:10:37 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:10:37 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:10:37 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:10:37 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+edge1-mac2 backend series: B A B A B A
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:10:37 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:10:37 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:10:37 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:10:37 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:10:38 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null --resolve app.team.test:443:10.7.6.79 https://app.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:10:38 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge2-mac3
+
+edge2-mac3 backend series: B A B A B A
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://api.team.test/api/status
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:10:38 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: B
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac4-owner@10.7.6.73 'curl --noproxy '"'"'*'"'"' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://api.team.test/api/status'
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:10:38 GMT
+Content-Type: application/json
+Content-Length: 70
+Connection: keep-alive
+X-Backend: A
+Cache-Control: no-store
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' -sS --max-time 5 --resolve app.team.test:80:10.7.6.63 -D - -o /dev/null http://app.team.test/
+HTTP/1.1 301 Moved Permanently
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:10:38 GMT
+Content-Type: text/html
+Content-Length: 169
+Connection: keep-alive
+Location: https://app.team.test/
+
+$ curl --noproxy '*' -sS --max-time 5 --resolve api.team.test:80:10.7.6.63 -D - -o /dev/null http://api.team.test/
+HTTP/1.1 301 Moved Permanently
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:10:39 GMT
+Content-Type: text/html
+Content-Length: 169
+Connection: keep-alive
+Location: https://api.team.test/
+
+$ curl --noproxy '*' -sS --max-time 5 --resolve app.team.test:80:10.7.6.79 -D - -o /dev/null http://app.team.test/
+HTTP/1.1 301 Moved Permanently
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:10:39 GMT
+Content-Type: text/html
+Content-Length: 169
+Connection: keep-alive
+Location: https://app.team.test/
+
+$ curl --noproxy '*' -sS --max-time 5 --resolve api.team.test:80:10.7.6.79 -D - -o /dev/null http://api.team.test/
+HTTP/1.1 301 Moved Permanently
+Server: nginx/1.31.8
+Date: Mon, 23 Nov 2026 19:10:39 GMT
+Content-Type: text/html
+Content-Length: 169
+Connection: keep-alive
+Location: https://api.team.test/
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null https://app.team.test/api/cache
+HTTP/1.1 200 OK
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:10:39 GMT
+Content-Type: application/json
+Content-Length: 74
+Connection: keep-alive
+X-Backend: B
+ETag: "cn-cache-v1"
+Cache-Control: public, max-age=60
+X-Edge: edge1-mac2
+
+$ curl --noproxy '*' --http1.1 -sS --connect-timeout 3 --max-time 8 -D - -o /dev/null -H 'If-None-Match: "cn-cache-v1"' https://app.team.test/api/cache
+HTTP/1.1 304 NOT MODIFIED
+Server: nginx/1.31.6
+Date: Mon, 23 Nov 2026 19:10:39 GMT
+Connection: keep-alive
+X-Backend: A
+ETag: "cn-cache-v1"
+Cache-Control: public, max-age=60
+X-Edge: edge1-mac2
+
+Evidence: /Users/mac1-owner/Documents/Learn/CN project/cn-project/evidence/phase2/20261124-004036-688745+0530-check.log
+Requested checks passed

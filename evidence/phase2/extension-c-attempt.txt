@@ -1,0 +1,24 @@
+2026-11-24T00:39:19.494451+05:30 | scenario=C
+C · Verify the primary edge, off-host client, and through-edge paths for both ports.
+$ ssh -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=yes -o UpdateHostKeys=no -o ClearAllForwardings=yes -o ForwardAgent=no mac2-owner@10.7.6.63 'curl --noproxy '"'"'*'"'"' -sS --connect-timeout 3 --max-time 4 -D - -o /dev/null http://10.7.6.79:3001/api/status'
+HTTP/1.1 200 OK
+Server: Werkzeug/3.1.9 Python/3.14.2
+Date: Mon, 23 Nov 2026 19:09:20 GMT
+Content-Type: application/json
+Content-Length: 70
+X-Backend: A
+Cache-Control: no-store
+Connection: close
+
+$ curl --noproxy '*' -sS --connect-timeout 3 --max-time 4 -D - -o /dev/null http://10.7.6.79:3001/api/status
+HTTP/1.1 200 OK
+Server: Werkzeug/3.1.9 Python/3.14.2
+Date: Mon, 23 Nov 2026 19:09:21 GMT
+Content-Type: application/json
+Content-Length: 70
+X-Backend: A
+Cache-Control: no-store
+Connection: close
+
+INCOMPLETE: Expected packet drop to A; observed curl exit 0
+Evidence: /Users/mac1-owner/Documents/Learn/CN project/cn-project/evidence/phase2/20261124-003919-494315+0530-C.log

@@ -1,0 +1,87 @@
+
+; <<>> DiG 9.10.6 <<>> @10.7.6.56 app.team.test A +time=2 +tries=1 +noall +answer
+; (1 server found)
+;; global options: +cmd
+app.team.test.		30	IN	A	10.7.6.63
+* Host app.team.test:443 was resolved.
+* IPv6: (none)
+* IPv4: 10.7.6.63
+*   Trying 10.7.6.63:443...
+* Connected to app.team.test (10.7.6.63) port 443
+* ALPN: curl offers http/1.1
+* (304) (OUT), TLS handshake, Client hello (1):
+} [222 bytes data]
+*  CAfile: /etc/ssl/cert.pem
+*  CApath: none
+* (304) (IN), TLS handshake, Server hello (2):
+{ [106 bytes data]
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+{ [841 bytes data]
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+{ [300 bytes data]
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+{ [4 bytes data]
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+} [37 bytes data]
+* TLSv1.2 (OUT), TLS change cipher, Change cipher spec (1):
+} [1 bytes data]
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+} [16 bytes data]
+* TLSv1.2 (IN), TLS change cipher, Change cipher spec (1):
+{ [1 bytes data]
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+{ [16 bytes data]
+* SSL connection using TLSv1.2 / ECDHE-RSA-CHACHA20-POLY1305 / [blank] / UNDEF
+* ALPN: server accepted http/1.1
+* Server certificate:
+*  subject: CN=app.team.test
+*  start date: Nov 23 17:47:27 2026 GMT
+*  expire date: Nov 23 17:47:27 2027 GMT
+*  subjectAltName: host "app.team.test" matched cert's "app.team.test"
+*  issuer: CN=app.team.test
+*  SSL certificate verify ok.
+* using HTTP/1.x
+> GET /api/status HTTP/1.1
+> Host: app.team.test
+> User-Agent: curl/8.7.1
+> Accept: */*
+>
+* Request completely sent off
+< HTTP/1.1 200 OK
+HTTP/1.1 200 OK
+< Server: nginx/1.31.6
+Server: nginx/1.31.6
+< Date: Mon, 23 Nov 2026 19:11:04 GMT
+Date: Mon, 23 Nov 2026 19:11:04 GMT
+< Content-Type: application/json
+Content-Type: application/json
+< Content-Length: 70
+Content-Length: 70
+< Connection: keep-alive
+Connection: keep-alive
+< X-Backend: B
+X-Backend: B
+< Cache-Control: no-store
+Cache-Control: no-store
+< X-Edge: edge1-mac2
+X-Edge: edge1-mac2
+<
+
+{ [70 bytes data]
+* Connection #0 to host app.team.test left intact
+tcpdump: listening on en0, link-type EN10MB (Ethernet), snapshot length 524288 bytes
+20 packets captured
+182 packets received by filter
+0 packets dropped by kernel
+
+1		10.7.6.73	10.7.6.56	DNS	Standard query 0xdbcb A app.team.test OPT
+2		10.7.6.56	10.7.6.73	DNS	Standard query response 0xdbcb A app.team.test A 10.7.6.63 OPT
+3	0	10.7.6.73	10.7.6.63	TCP	58795 → 443 [SYN, ECE, CWR] Seq=0 Win=65535 Len=0 MSS=1460 WS=64 TSval=1165055133 TSecr=0 SACK_PERM
+4	0	10.7.6.63	10.7.6.73	TCP	443 → 58795 [SYN, ACK, ECE] Seq=0 Ack=1 Win=65535 Len=0 MSS=1460 WS=64 TSval=3028942603 TSecr=1165055133 SACK_PERM
+6	0	10.7.6.73	10.7.6.63	TLSv1.2	Client Hello (SNI=app.team.test)
+9	0	10.7.6.63	10.7.6.73	TLSv1.2	Server Hello, Certificate, Server Key Exchange, Server Hello Done
+11	0	10.7.6.73	10.7.6.63	TLSv1.2	Client Key Exchange, Change Cipher Spec, Encrypted Handshake Message
+13	0	10.7.6.63	10.7.6.73	TLSv1.2	Change Cipher Spec, Encrypted Handshake Message
+15	0	10.7.6.73	10.7.6.63	TLSv1.2	Application Data
+17	0	10.7.6.63	10.7.6.73	TLSv1.2	Application Data
+19	0	10.7.6.73	10.7.6.63	TLSv1.2	Encrypted Alert
