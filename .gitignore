@@ -19,3 +19,7 @@ evidence/local-raw/
 
 # Video folder artifacts
 video/
+
+# Operator locks and local drill state
+team/.dns.lock
+team/.demo-state.json
