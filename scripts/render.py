@@ -36,6 +36,7 @@ def render(lab, node, dest):
             f"{lab.ips['mac2']} {host}\n" for host in (lab.app, lab.api)))
 
     if "edge" in ROLES[node]:
+        put("bin/edge-start.command", (ROOT / "scripts/edge-start.command").read_text())
         config("nginx/phase2-master.conf.template", "nginx/nginx.conf", site="cn-project.conf")
         config("nginx/phase2-site.conf.template", "nginx/cn-project.conf",
                app=lab.app, api=lab.api, edge=edge,

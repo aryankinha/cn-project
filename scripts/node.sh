@@ -52,7 +52,21 @@ operate() {
             if owns "$pid" "$marker"; then return 0; fi
             case "$service" in
                 dns) dnsmasq --test --conf-file="$dns"; dnsmasq --conf-file="$dns" ;;
-                edge) nginx -p "$home/" -c "$edge" -t; nginx -p "$home/" -c "$edge" ;;
+                edge)
+                    nginx -p "$home/" -c "$edge" -t
+                    if [[ -n "${SSH_CONNECTION:-}" ]]; then
+                        if [[ "$(stat -f %Su /dev/console)" != "$(id -un)" ]]; then
+                            echo "Edge startup requires the owner to be logged into macOS" >&2
+                            return 1
+                        fi
+                        /usr/bin/open -a Terminal "$home/bin/edge-start.command"
+                        for attempt in {1..20}; do
+                            if owns "$(cat "$file" 2>/dev/null || true)" "$marker"; then break; fi
+                            sleep .5
+                        done
+                    else
+                        nginx -p "$home/" -c "$edge"
+                    fi ;;
                 backend)
                     test -x "$home/backend/.venv/bin/python"
                     if lsof -tiTCP:"$BACKEND_PORT" -sTCP:LISTEN >/dev/null; then

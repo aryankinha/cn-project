@@ -59,15 +59,25 @@ restart_services() {
 rollback() {
     local path service failed=0
     test -f "$backup/ready" || return 1
-    for service in $ROLES; do "$control" stop "$service" || failed=1; done
+    for service in $ROLES; do
+        if [[ "$service" == edge ]] && grep -qx edge "$backup/active"; then continue; fi
+        "$control" stop "$service" || failed=1
+    done
     for path in "${files[@]}"; do
         if [[ -f "$backup/$path" ]]; then publish "$backup/$path" "$home/$path" || failed=1
         elif [[ -f "$home/$path" ]]; then unlink "$home/$path" || failed=1
         fi
     done
     for service in $(cat "$backup/active"); do
-        if [[ -x "$control" ]]; then "$control" start "$service" || failed=1
-        else "$home/bin/cn.sh" "$service" start || failed=1; fi
+        if [[ -x "$control" ]]; then
+            if [[ "$service" == edge ]] && "$control" status edge; then
+                "$control" reload edge || failed=1
+            else
+                "$control" start "$service" || failed=1
+            fi
+        else
+            "$home/bin/cn.sh" "$service" start || failed=1
+        fi
     done
     return "$failed"
 }
