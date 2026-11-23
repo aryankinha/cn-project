@@ -1,0 +1,4 @@
+# Only the node's backend port is affected.
+$loopback
+pass in quick on $interface inet proto tcp from $edges to $ip port $port
+block drop in quick proto tcp from any to any port $port

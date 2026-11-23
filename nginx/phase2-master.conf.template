@@ -1,0 +1,7 @@
+worker_processes 1;
+pid run/nginx.pid;
+error_log logs/nginx-master.log warn;
+events { worker_connections 256; }
+http {
+    include $site;
+}

@@ -9,11 +9,12 @@ Usage:
 import os
 import socket
 from flask import Flask, jsonify, make_response, request
+from werkzeug.serving import make_server
 
 app = Flask(__name__)
 BACKEND_ID = os.environ.get("BACKEND_ID", "A")
 PORT = int(os.environ.get("PORT", 3001))
-ETAG = '"cn-cache-v1"'
+CACHE_TAG = "cn-cache-v1"
 
 
 @app.route("/")
@@ -46,27 +47,22 @@ def status():
 
 @app.route("/api/cache")
 def cache():
-    if request.headers.get("If-None-Match") == ETAG:
+    if request.if_none_match.star_tag or request.if_none_match.contains_weak(CACHE_TAG):
         resp = make_response("", 304)
-        resp.headers["X-Backend"] = BACKEND_ID
-        resp.headers["ETag"] = ETAG
-        resp.headers["Cache-Control"] = "public, max-age=60"
-        return resp
-
-    resp = make_response(
-        jsonify(
-            backend=BACKEND_ID,
+    else:
+        resp = jsonify(
             message="CN cache example",
             cached_data="Fresh response from server",
         )
-    )
     resp.headers["X-Backend"] = BACKEND_ID
-    resp.headers["ETag"] = ETAG
+    resp.set_etag(CACHE_TAG)
     resp.headers["Cache-Control"] = "public, max-age=60"
     return resp
 
 
 if __name__ == "__main__":
-    # host=0.0.0.0 is required so OTHER Macs / clients on the LAN can reach this service.
-    print(f"Backend {BACKEND_ID} starting on 0.0.0.0:{PORT}")
-    app.run(host="0.0.0.0", port=PORT)
+    # Pre-bind so startup does not need a reverse DNS lookup on the lab LAN.
+    with socket.create_server(("0.0.0.0", PORT)) as listener:
+        server = make_server("0.0.0.0", PORT, app, threaded=True, fd=listener.fileno())
+    print(f"Backend {BACKEND_ID} listening on 0.0.0.0:{PORT}", flush=True)
+    server.serve_forever()

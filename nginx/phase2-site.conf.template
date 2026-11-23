@@ -1,0 +1,46 @@
+log_format cn_edge '$$remote_addr [$$time_local] "$$request" status=$$status '
+                   'edge=$edge upstream=$$upstream_addr '
+                   'upstream_status=$$upstream_status rt=$$upstream_response_time';
+
+upstream backend_pool {
+    zone cn_backend_pool 256k;
+    server $backend_a max_fails=1 fail_timeout=10s;
+    server $backend_b max_fails=1 fail_timeout=10s;
+}
+
+server {
+    listen 80;
+    server_name $app $api;
+    return 301 https://$$host$$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name $app $api;
+    ssl_certificate $home/tls/edge.crt;
+    ssl_certificate_key $home/tls/edge.key;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_session_cache shared:cn_tls:1m;
+    access_log $home/logs/nginx-access.log cn_edge;
+    error_log $home/logs/nginx-error.log warn;
+    add_header X-Edge $edge always;
+
+    location = /edge-health {
+        default_type text/plain;
+        return 200 "edge $edge ok\n";
+    }
+
+    location / {
+        proxy_pass http://backend_pool;
+        proxy_http_version 1.1;
+        proxy_set_header Host $$host;
+        proxy_set_header X-Real-IP $$remote_addr;
+        proxy_set_header X-Forwarded-For $$remote_addr;
+        proxy_set_header X-Forwarded-Proto $$scheme;
+        proxy_connect_timeout 2s;
+        proxy_read_timeout 5s;
+        proxy_next_upstream error timeout http_502 http_503 http_504;
+        proxy_next_upstream_tries 2;
+    }
+}
