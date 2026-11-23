@@ -21,6 +21,12 @@ snapshots are in the ignored `evidence/local-raw/` directory. The original
 files and active-service list are retained inside each release's `previous/`
 directory. Staging validates nginx against the cert and key already installed
 on the edge. Backend dependency setup runs before activation.
+A fresh edge must have the existing team TLS files provisioned by its owner
+in the project TLS directory before staging can validate nginx. Keep private
+keys out of release bundles and use protected owner-to-owner transfer only
+when a new edge actually needs the key. The manual backend launcher accepts
+a separate setup step (`./scripts/run-backend.sh --setup`) before A or B.
+
 
 For manual release rollback on an affected node, set `release` to the
 specific activated release directory under `~/cn-project/releases/`, then

@@ -32,9 +32,13 @@ done
 
 SNAPSHOT = r"""
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/local/sbin:$PATH"
-cd "$HOME/cn-project" || exit
 networksetup -getdnsservers Wi-Fi
 scutil --dns
+if [ ! -d "$HOME/cn-project" ]; then
+    echo "Project runtime is not installed"
+    exit 0
+fi
+cd "$HOME/cn-project" || exit
 for port in 53 80 443 3001 3002; do lsof -nP -iTCP:"$port" -sTCP:LISTEN; done
 lsof -nP -iUDP:53
 for file in run/*.pid; do
