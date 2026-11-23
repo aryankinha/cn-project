@@ -92,7 +92,7 @@ BACKUP_CAPTURE = r"""
 set -euo pipefail
 iface="$1"; backup="$2"; host="$3"
 trace="$(mktemp -t cn-dns)"
-tcpdump -ni "$iface" -U -s 0 -w "$trace" "udp and src host $backup and src port 53" >/dev/null 2>&1 &
+tcpdump --immediate-mode -ni "$iface" -U -s 0 -w "$trace" "udp and src host $backup and src port 53" >/dev/null 2>&1 &
 pid=$!
 trap 'kill -INT "$pid" 2>/dev/null || true; wait "$pid" 2>/dev/null || true; unlink "$trace"' EXIT
 sleep 1

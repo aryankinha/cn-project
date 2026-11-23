@@ -13,7 +13,7 @@ set -euo pipefail
 iface="$1"; primary="$2"; backup="$3"; edge="$4"; host="$5"
 file="$(mktemp -t cn-pcap)"
 trace="$(mktemp -t cn-trace)"
-tcpdump -ni "$iface" -s 0 -U -w "$file" \
+tcpdump --immediate-mode -ni "$iface" -s 0 -U -w "$file" \
     "((host $primary or host $backup) and port 53) or (host $edge and tcp port 443)" \
     >"$trace" 2>&1 &
 pid=$!
