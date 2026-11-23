@@ -40,15 +40,29 @@ def main():
     raw.write_bytes(base64.b64decode(result.stdout))
     tshark = shutil.which("tshark") or "/Applications/Wireshark.app/Contents/MacOS/tshark"
     capture = output.with_suffix(".pcapng")
-    run((tshark, "-r", raw, "-F", "pcapng", "-w", capture))
+    run((tshark, "-r", raw, "-Y", f'dns.qry.name == "{lab.app}" or tcp.port == 443',
+         "-F", "pcapng", "-w", capture))
     raw.unlink()
     summary = run((tshark, "-r", capture, "-Y", "dns or tcp.flags.syn == 1 or tls",
                    "-T", "fields", "-e", "frame.number", "-e", "tcp.stream", "-e", "ip.src",
                    "-e", "ip.dst", "-e", "_ws.col.Protocol", "-e", "_ws.col.Info"))
     output.with_suffix(".txt").write_text(result.stderr + "\n" + summary.stdout)
-    for term in ("Standard query response", "[SYN]", "[SYN, ACK]", "Client Hello",
-                 "Server Hello", "Certificate", "Application Data"):
-        require(term in summary.stdout, f"Missing {term} in {capture}")
+    expected = {
+        "DNS answer": f'dns.flags.response == 1 and dns.a == {lab.ips["mac2"]}',
+        "TCP SYN": "tcp.dstport == 443 and tcp.flags.syn == 1 and tcp.flags.ack == 0",
+        "TCP SYN-ACK": "tcp.srcport == 443 and tcp.flags.syn == 1 and tcp.flags.ack == 1",
+        "TCP ACK": "tcp.dstport == 443 and tcp.flags == 0x0010 and tcp.len == 0",
+        "TLS ClientHello": "tls.handshake.type == 1",
+        "TLS ServerHello": "tls.handshake.type == 2",
+        "TLS Certificate": "tls.handshake.type == 11",
+        "TLS ChangeCipherSpec": "tls.record.content_type == 20",
+        "Encrypted application data": "tls.record.content_type == 23",
+    }
+    for label, display_filter in expected.items():
+        frames = run((tshark, "-r", capture, "-Y", display_filter, "-T", "fields",
+                      "-e", "frame.number")).stdout.split()
+        require(frames, f"Missing {label} in {capture}")
+        print(f"{label}: frames {', '.join(frames)}")
     print(capture)
 
 
