@@ -1,4 +1,21 @@
-# Private Network Service Platform — Phase I
+# Private Network Service Platform
+
+The Phase 2 deployment uses four macOS nodes. Mac 1 drives the deployment locally
+and reaches the other three Macs over SSH. Mac 1 and Mac 2 serve matching DNS
+records. Mac 2 runs the primary edge, Mac 3 runs the standby and Backend A, and
+Mac 4 runs Backend B.
+
+1. Copy `team/team.env.example` to the ignored `team/team.env` and fill in your LAN values.
+2. Run `./scripts/deploy.sh --check` and `./scripts/deploy.sh --all --dry-run`.
+3. Deploy a committed revision with `./scripts/deploy.sh --all`.
+4. Run `./scripts/demo.sh check`. Use the [runbook](docs/phase2-runbook.md) for
+   demonstrations, administrator steps, and recovery.
+
+[Current architecture](docs/architecture.md) · [Troubleshooting](docs/troubleshooting.md) ·
+[Viva preparation](docs/viva-preparation.md) · [Phase 2 report](docs/phase2-report.md) ·
+[Evidence index](evidence/phase2/README.md)
+
+The original Phase 1 record follows.
 
 Computer Networks course project for four students on four macOS laptops. The backend stays simple; the project demonstrates DNS → TCP → TLS → HTTP, nginx load balancing, caching and packet analysis on a private LAN.
 
