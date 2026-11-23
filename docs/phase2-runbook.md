@@ -88,7 +88,7 @@ sudo "$HOME/cn-project/bin/firewall.sh" rollback
 ```
 
 For the final combined isolation and standby check, apply `standby.pf` on
-Mac 3 and Mac 4, then repeat the isolation and cutover tests. The difference
+Mac 3 and Mac 4, then run `./scripts/demo.sh C --standby` and repeat the cutover test. The difference
 is the explicit Mac 3 LAN source on Mac 4's Backend B port. The firewall helper
 uses a dedicated anchor and one saved pf enable token. Rollback restores the
 saved anchor and releases that token. Existing connections can retain pf

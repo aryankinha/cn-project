@@ -23,3 +23,4 @@ video/
 # Operator locks and local drill state
 team/.dns.lock
 team/.demo-state.json
+team/.operation.lock

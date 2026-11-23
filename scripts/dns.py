@@ -4,7 +4,7 @@ import fcntl
 import ipaddress
 import sys
 
-from cnlib import Lab, ROOT, require
+from cnlib import Lab, ROOT, operation_lock, require
 
 RESOLVERS = ("mac1", "mac2")
 WRITE = r"""
@@ -72,6 +72,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     lab = Lab()
     try:
-        change(lab, f"{args.record}.{lab.domain}", lab.ips.get(args.target, args.target))
+        with operation_lock():
+            change(lab, f"{args.record}.{lab.domain}", lab.ips.get(args.target, args.target))
     except (RuntimeError, ValueError) as error:
         sys.exit(str(error))

@@ -10,7 +10,7 @@ import sys
 import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from cnlib import Lab, NODES, ROOT, headers, require, run
+from cnlib import Lab, NODES, ROOT, headers, operation_lock, require, run
 from diagnose import diagnose
 from dns import change
 from smoke import series, smoke
@@ -155,7 +155,7 @@ def direct(lab, source, backend):
                   check=False, display=True)
 
 
-def isolation(lab, restored=False):
+def isolation(lab, restored=False, standby=False):
     print("C · Verify the primary edge, off-host client, and through-edge paths for both ports.")
     for backend in ("A", "B"):
         code, fields = headers(direct(lab, "mac2", backend))
@@ -169,6 +169,14 @@ def isolation(lab, restored=False):
                     f"Expected packet drop to {backend}; observed curl exit {probe.returncode}")
     series(lab, "edge1-mac2")
     if not restored:
+        probe = direct(lab, "mac3", "B")
+        if standby:
+            code, fields = headers(probe)
+            require(code == 200 and fields.get("x-backend") == "B", "Standby cannot reach Backend B")
+            series(lab, "edge2-mac3", lab.ips["mac3"])
+        else:
+            require(probe.returncode == 28 and not probe.stdout,
+                    "Strict profile must deny Mac 3's LAN hop to Backend B")
         print("Isolation behavior verified. Roll back on both backend Macs, then run C --restored.")
 
 
@@ -290,12 +298,13 @@ def main():
                                            "break", "answer", "fix", "diagnose", "phase1"))
     parser.add_argument("--flush", action="store_true")
     parser.add_argument("--restored", action="store_true")
+    parser.add_argument("--standby", action="store_true")
     parser.add_argument("--wrong-client", action="store_true")
     args = parser.parse_args()
     lab = Lab()
     steps = {"who": who, "check": smoke, "baseline": baseline, "A": backup_dns,
              "B": lambda lab: ttl(lab, flush=args.flush),
-             "C": lambda lab: isolation(lab, restored=args.restored), "D": failover,
+             "C": lambda lab: isolation(lab, restored=args.restored, standby=args.standby), "D": failover,
              "E": cutover, "F": fault, "break": inject, "fix": recover,
              "answer": lambda _: print(json.loads(STATE.read_text()) if STATE.exists() else "No active practice fault"),
              "diagnose": lambda lab: require(diagnose(lab) is None, "Diagnostic found a fault"),
@@ -307,7 +316,8 @@ def main():
     with path.open("x") as log, redirect_stdout(Tee(sys.stdout, log)), redirect_stderr(Tee(sys.stderr, log)):
         print(f"{datetime.now().astimezone().isoformat()} | scenario={args.command}", flush=True)
         try:
-            steps[args.command](lab)
+            with operation_lock(allow_fault=args.command in ("answer", "diagnose", "fix", "who")):
+                steps[args.command](lab)
         except (OSError, RuntimeError, subprocess.SubprocessError, KeyboardInterrupt) as error:
             print(f"INCOMPLETE: {error}", file=sys.stderr, flush=True)
             return 1

@@ -8,7 +8,7 @@ import sys
 import tempfile
 import time
 
-from cnlib import Lab, NODES, ROLES, ROOT, SSH, headers, require, run
+from cnlib import Lab, NODES, ROLES, ROOT, SSH, operation_lock, require, run
 from render import render
 from smoke import smoke
 
@@ -97,6 +97,11 @@ def main():
         for node in nodes:
             print(f"{node}: {lab.runtime(node)} | {', '.join(ROLES[node])}")
         return
+    with operation_lock():
+        deploy(lab, nodes)
+
+
+def deploy(lab, nodes):
     require(not run(("git", "-C", ROOT, "status", "--porcelain", "--untracked-files=no")).stdout.strip(),
             "Commit tracked implementation changes before deploying")
     rev = run(("git", "-C", ROOT, "rev-parse", "--short=12", "HEAD")).stdout.strip()

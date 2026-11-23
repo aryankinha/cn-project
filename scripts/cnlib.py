@@ -1,4 +1,6 @@
 """Inventory and transport for the four-Mac lab."""
+from contextlib import contextmanager
+import fcntl
 import ipaddress
 import os
 from pathlib import Path
@@ -117,3 +119,16 @@ def headers(response):
 def require(condition, message):
     if not condition:
         raise RuntimeError(message)
+
+
+@contextmanager
+def operation_lock(*, allow_fault=False):
+    """Serialize controller-side changes while allowing individual read-only SSH probes."""
+    with (ROOT / "team/.operation.lock").open("a") as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError as error:
+            raise RuntimeError("Another deployment or demo is running on Mac 1") from error
+        require(allow_fault or not (ROOT / "team/.demo-state.json").exists(),
+                "A practice fault is active. Run ./scripts/demo.sh fix first.")
+        yield
