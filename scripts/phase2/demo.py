@@ -92,14 +92,18 @@ BACKUP_CAPTURE = r"""
 set -euo pipefail
 iface="$1"; backup="$2"; host="$3"
 trace="$(mktemp -t cn-dns)"
-tcpdump -ni "$iface" -l -s 0 "udp and src host $backup and src port 53" >"$trace" 2>&1 &
+tcpdump -ni "$iface" -U -s 0 -w "$trace" "udp and src host $backup and src port 53" >/dev/null 2>&1 &
 pid=$!
-trap 'kill "$pid" 2>/dev/null || true; wait "$pid" 2>/dev/null || true; unlink "$trace"' EXIT
+trap 'kill -INT "$pid" 2>/dev/null || true; wait "$pid" 2>/dev/null || true; unlink "$trace"' EXIT
 sleep 1
 dscacheutil -q host -a name "$host"
 sleep 1
-cat "$trace"
-grep -iF "$host" "$trace" | grep -F " A " >/dev/null
+kill -INT "$pid"
+wait "$pid"
+tshark=/Applications/Wireshark.app/Contents/MacOS/tshark
+answers="$("$tshark" -r "$trace" -Y "dns.flags.response == 1 && dns.qry.name == \"$host\" && dns.a == $backup" -T fields -e ip.src -e dns.qry.name -e dns.a)"
+test -n "$answers"
+printf '%s\n' "$answers"
 echo answer-from-backup
 """
 
@@ -123,6 +127,8 @@ def record_change(lab, target):
 def ttl(lab, *, flush=False):
     print("B · Compare the authoritative change with a primed client's cached answer.")
     primary, standby = (lab.ips[node] for node in ("mac2", "mac3"))
+    # Expire any entry left by earlier probes, then take a fresh system answer.
+    time.sleep(lab.ttl + 2)
     require(ip_cached(lab) == primary, "Start with the primary record")
     with record_change(lab, standby):
         require(ip_cached(lab) == primary, "The old answer was not captured after the update")

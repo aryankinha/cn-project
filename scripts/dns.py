@@ -46,14 +46,12 @@ def change(lab, name, ip):
         try:
             for node in RESOLVERS:
                 attempted.append(node)
-                lab.on(node, ("bash", "-s"), data=WRITE.replace('cat > "$tmp"',
-                    "cat > \"$tmp\" <<'CN_HOSTS'\n" + text + "CN_HOSTS"), display=True)
+                lab.on(node, ("bash", "-c", WRITE), data=text, display=True)
             verify(lab, desired)
         except (Exception, KeyboardInterrupt):
             for node in reversed(attempted):
                 old = files[node].rstrip("\n") + "\n"
-                lab.on(node, ("bash", "-s"), data=WRITE.replace('cat > "$tmp"',
-                    "cat > \"$tmp\" <<'CN_HOSTS'\n" + old + "CN_HOSTS"), check=False, display=True)
+                lab.on(node, ("bash", "-c", WRITE), data=old, check=False, display=True)
             verify(lab, original)
             raise
         return original[name]
