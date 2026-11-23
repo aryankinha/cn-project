@@ -1,5 +1,7 @@
 # Phase I results — Aryan Kinha and team
 
+> Historical October Phase 1 record. Use the [final submission checklist](form-submission-checklist.md) and [live demo guide](demo-commands.md) for the integrated project.
+
 Final verification: 5 October 2026, approximately 02:46–02:59 IST. All observations were collected from Aryan's Mac. The final DNS/HTTP/HTTPS smoke test passed, the root endpoint returned 200, and cache revalidation returned 304. The working service is verified; the complete Phase I submission evidence remains incomplete because remote inventory, resolver and controlled-failure evidence is unavailable.
 
 ## Team and architecture
@@ -67,4 +69,4 @@ The synchronized configuration passed [local nginx validation](../evidence/phase
 
 ## Later command-recording run
 
-The [replacement five-minute video](../video/README.md) records fresh terminal commands and navigation of the earlier successful capture in Wireshark. In the fresh run, DNS and ping worked and Backend A returned 200, while Backend B and edge HTTPS timed out. Thus the earlier successful baseline above is preserved as historical evidence, but current healthy operation was not re-established during this recording. Complete controlled failure/recovery tests remain unverified.
+The replacement five-minute video (historical local artifact) records fresh terminal commands and navigation of the earlier successful capture in Wireshark. In the fresh run, DNS and ping worked and Backend A returned 200, while Backend B and edge HTTPS timed out. Thus the earlier successful baseline above is preserved as historical evidence, but current healthy operation was not re-established during this recording. Complete controlled failure/recovery tests remain unverified.

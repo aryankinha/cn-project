@@ -256,12 +256,23 @@ def fault(lab):
             recover(lab)
 
 
+def phase1_client(lab, *, restored=False):
+    client = "mac3"
+    lab.on(client, ("networksetup", "-getdnsservers", "Wi-Fi"), display=True)
+    if restored:
+        require(ip_cached(lab, client) == lab.ips["mac2"], "Mac 3 did not recover normal DNS")
+        edge(lab, "edge1-mac2", client)
+    else:
+        require(ip_cached(lab, client) is None, "Mac 3 can still resolve the private name")
+        status, fields = headers(lab.https(lab.app, ip=lab.ips["mac2"], source=client, display=True))
+        require(status == 200 and fields.get("x-edge") == "edge1-mac2",
+                "Mac 3 could not reach the trusted primary edge with DNS bypassed")
+
+
 def phase1_failures(lab, *, wrong_client=False):
     print("Phase 1 §6.3 · Run the wrong-record, backend and wrong-port scenarios.")
     if wrong_client:
-        require(ip_cached(lab, "mac3") is None, "Mac 3 can still resolve with its wrong DNS setting")
-        require(lab.query("mac2", lab.app, source="mac3"), "Mac 3 also lost direct reachability")
-        print("Wrong-client-DNS failure observed on Mac 3. Apply the team DNS client profile for recovery.")
+        phase1_client(lab)
     with record_change(lab, lab.ips["mac1"]):
         await_ip(lab, lab.ips["mac1"])
         require(diagnose(lab) == "DNS", "Expected incorrect A record to be diagnosed")
@@ -281,8 +292,7 @@ def phase1_failures(lab, *, wrong_client=False):
         smoke(lab)
     require(diagnose(lab, port=65534) == "TCP", "Wrong-port check did not fail at TCP")
     require(diagnose(lab) is None, "Normal service did not recover")
-    if not wrong_client:
-        raise RuntimeError("Four controlled scenarios verified; wrong-client-DNS demonstration pending")
+    print("Four controller-managed scenarios passed. Use phase1-client for the owner-assisted DNS check and recovery.")
 
 
 class Tee(io.TextIOBase):
@@ -301,7 +311,7 @@ class Tee(io.TextIOBase):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("command", choices=("who", "check", "baseline", "A", "B", "C", "D", "E", "F",
-                                           "break", "answer", "fix", "diagnose", "phase1"))
+                                           "break", "answer", "fix", "diagnose", "phase1", "phase1-client"))
     parser.add_argument("--flush", action="store_true")
     parser.add_argument("--restored", action="store_true")
     parser.add_argument("--standby", action="store_true")
@@ -314,7 +324,8 @@ def main():
              "E": cutover, "F": fault, "break": inject, "fix": recover,
              "answer": lambda _: print(json.loads(STATE.read_text()) if STATE.exists() else "No active practice fault"),
              "diagnose": lambda lab: require(diagnose(lab) is None, "Diagnostic found a fault"),
-             "phase1": lambda lab: phase1_failures(lab, wrong_client=args.wrong_client)}
+             "phase1": lambda lab: phase1_failures(lab, wrong_client=args.wrong_client),
+             "phase1-client": lambda lab: phase1_client(lab, restored=args.restored)}
     folder = ROOT / "evidence/phase2"
     folder.mkdir(exist_ok=True)
     stamp = datetime.now().astimezone().strftime("%Y%m%d-%H%M%S-%f%z")

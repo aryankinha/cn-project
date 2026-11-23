@@ -1,51 +1,46 @@
 #!/bin/bash
-# Run from any CLIENT Mac to check DNS, HTTP and trusted HTTPS (Tasks A-E).
-# Usage: ./scripts/smoke-test.sh team.test
-# Uses the client's certificate trust store by default. To explicitly trust
-# the project's self-signed certificate instead:
-# HTTPS_CA_CERT=tls/edge.crt ./scripts/smoke-test.sh team.test
+# Standalone verification from a configured lab client. No SSH or inventory is needed.
 set -euo pipefail
-
-DOMAIN="${1:-team.test}"
-HTTPS_OPTIONS=()
-if [ -n "${HTTPS_CA_CERT:-}" ]; then
-  if [ ! -r "$HTTPS_CA_CERT" ]; then
-    echo "ERROR: Cannot read HTTPS_CA_CERT: $HTTPS_CA_CERT" >&2
-    exit 1
-  fi
-  HTTPS_OPTIONS=(--cacert "$HTTPS_CA_CERT")
+domain="${1:-team.test}"
+curl_args=(--noproxy '*' --http1.1 --silent --show-error --connect-timeout 3 --max-time 10)
+if [[ -n "${HTTPS_CA_CERT:-}" ]]; then
+    [[ -r "$HTTPS_CA_CERT" ]] || { echo "Cannot read HTTPS_CA_CERT" >&2; exit 1; }
+    curl_args+=(--cacert "$HTTPS_CA_CERT")
 fi
 
-echo "== 1. DNS resolution =="
-DNS_RESULT="$(dscacheutil -q host -a name "app.$DOMAIN" | awk '/ip_address:/{print $2}')"
-if [ -z "$DNS_RESULT" ]; then
-  echo "ERROR: macOS could not resolve app.$DOMAIN. Set this client's DNS to the DNS Mac's LAN IP (127.0.0.1 only on the DNS Mac) and remove public secondary resolvers." >&2
-  exit 1
-fi
-printf '%s\n' "$DNS_RESULT"
+header() { awk -v name="$1" 'tolower($1) == name ":" {sub(/^[^:]*:[[:space:]]*/, ""); print; exit}'; }
+response() { curl "${curl_args[@]}" -D - -o /dev/null "$@" | tr -d '\r'; }
+expect_status() {
+    [[ "$1" == "HTTP/1.1 $2 "* ]] || { printf 'Expected HTTP %s\n%s\n' "$2" "$1" >&2; exit 1; }
+}
 
-echo ""
-echo "== 2. HTTP through the load balancer (5 requests) =="
-for i in 1 2 3 4 5; do
-  curl --fail --silent --show-error --connect-timeout 3 --max-time 10 "http://app.$DOMAIN/api/status"
-  echo ""
+for name in "app.$domain" "api.$domain"; do
+    dscacheutil -q host -a name "$name" | awk '/^ip_address:/ { print; found=1 } END { exit !found }'
+    result="$(response "http://$name/api/status")"
+    expect_status "$result" 301
+    [[ "$(header location <<< "$result")" == "https://$name/api/status" ]]
+    result="$(response "https://$name/api/status")"
+    expect_status "$result" 200
+    printf '%s\n' "$result"
 done
 
-echo ""
-echo "== 3. Response headers (Cache-Control, X-Backend) =="
-curl --fail --silent --show-error --connect-timeout 3 --max-time 10 --head "http://app.$DOMAIN/api/status"
+url="https://app.$domain/api"
+previous=
+for attempt in {1..6}; do
+    result="$(response "$url/status")"
+    expect_status "$result" 200
+    backend="$(header x-backend <<< "$result")"
+    edge="$(header x-edge <<< "$result")"
+    [[ -n "$edge" && ( "$backend" == A || "$backend" == B ) && "$backend" != "$previous" ]] ||
+        { printf 'Expected A/B rotation; previous=%s edge=%s backend=%s\n' "$previous" "$edge" "$backend" >&2; exit 1; }
+    previous="$backend"
+    printf 'Request %s: %s backend %s\n' "$attempt" "$edge" "$backend"
+done
 
-echo ""
-echo "== 4. HTTPS certificate validation and backend response =="
-# Keep hostname and certificate verification enabled; never use --insecure.
-curl ${HTTPS_OPTIONS[@]+"${HTTPS_OPTIONS[@]}"} --fail --silent --show-error --verbose \
-  --connect-timeout 3 --max-time 10 "https://app.$DOMAIN/api/status"
-echo ""
-
-echo ""
-echo "== 5. HTTPS response headers (Cache-Control, X-Backend) =="
-curl ${HTTPS_OPTIONS[@]+"${HTTPS_OPTIONS[@]}"} --fail --silent --show-error \
-  --connect-timeout 3 --max-time 10 --head "https://app.$DOMAIN/api/status"
-
-echo ""
-echo "Smoke test passed: DNS, HTTP and HTTPS requests succeeded."
+result="$(response "$url/cache")"
+expect_status "$result" 200
+tag="$(header etag <<< "$result")"
+[[ -n "$tag" && "$(header cache-control <<< "$result")" == *"max-age=60"* ]]
+result="$(response -H "If-None-Match: $tag" "$url/cache")"
+expect_status "$result" 304
+printf '%s\nSmoke test passed\n' "$result"

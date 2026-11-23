@@ -81,9 +81,9 @@ second working test client during live verification. The final application
 check passed after all controlled failures restored their baseline. The LAN
 capture was decoded and its DNS, TCP and TLS fields were asserted.
 
-A, D, E and F passed. The TTL expiry portion of B passed. The manual cache
-flush and C's apply, deny and rollback checks need local administrator
-participation. Direct HTTP to both backend ports from Mac 1 was still open.
+A, B, D, E and F passed. The follow-up B run verified the manual cache flush
+and immediate return to the primary record. C's apply, deny and rollback checks
+still need local administrator participation. Direct HTTP to both backend ports from Mac 1 was still open.
 The separate standby firewall profile also needs an integrated retest after
 the owners enable it. The firewall policy files passed staged syntax checks.
 

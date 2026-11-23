@@ -116,10 +116,5 @@ does not terminate a client connection that is already open.
 
 For practice, run `./scripts/demo.sh break`, `diagnose`, `answer`, and
 `fix` as separate subcommands of `demo.sh`. Keep the local drill state until
-`fix` verifies healthy HTTPS. For the five original Phase 1 failures, use
-`./scripts/demo.sh phase1` for the controlled wrong-record, backend-stop,
-and wrong-port scenarios. Demonstrate wrong **client** DNS with the owner
-on a designated client, verify direct LAN connectivity, then restore the
-team DNS profile and prove ordinary named HTTPS. The `--wrong-client`
-option records the intentionally wrong Mac 3 client state when that owner
-has prepared it.
+`fix` verifies healthy HTTPS. For the original Phase 1 failure drills, run the controller-managed scenarios and
+the separate wrong-client-DNS command in the [Phase 1 failure checklist](phase1-failure-tests.md).

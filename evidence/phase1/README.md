@@ -4,7 +4,7 @@ Collected on Aryan Kinha's Mac on 5 October 2026. Names, enrollment numbers and 
 
 ## Later video-recording run
 
-The [new command/Wireshark video](../../video/README.md) records a later fresh command session. All three Macs answered ping and DNS resolved, but Backend B and edge HTTPS timed out; Backend A returned 200. [Actual command output](../../video/phase1-live-command-output.txt) and [timed terminal recording](../../video/phase1-live-terminal.cast) are preserved. The successful results below are the earlier baseline, not a claim that the later run succeeded.
+The new command/Wireshark video (historical local artifact) records a later fresh command session. All three Macs answered ping and DNS resolved, but Backend B and edge HTTPS timed out; Backend A returned 200. Actual command output (historical local artifact) and timed terminal recording (historical local artifact) were produced locally. The successful results below are the earlier baseline, not a claim that the later run succeeded.
 
 ## Earlier successful baseline
 

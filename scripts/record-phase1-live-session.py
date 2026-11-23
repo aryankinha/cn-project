@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
 """Record actual project commands and timings into an asciicast; requires live team services."""
+
+import sys
+
+if "--archive-replay" not in sys.argv[1:]:
+    sys.exit("October Phase 1 recorder. Use scripts/smoke-test.sh and "
+             "scripts/phase2/capture.py for the current submission. "
+             "Use --archive-replay only on the original October LAN.")
+
 import os,pty,select,subprocess,json,time,struct,fcntl,termios,signal
 from pathlib import Path
 root=Path(__file__).resolve().parents[1]

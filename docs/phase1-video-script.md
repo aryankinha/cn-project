@@ -1,5 +1,7 @@
 # Phase I team demonstration script
 
+> Historical October Phase 1 record. Use the [final submission checklist](form-submission-checklist.md) and [live demo guide](demo-commands.md) for the integrated project.
+
 A structured speaking guide; the supplied assignment does not specify a five-minute recording limit. Use the actual evidence and do not read pending results as completed achievements.
 
 1. **Aryan Kinha (2401020013): topology and DNS.** Introduce four Macs and all team roles. Display architecture and inventory. Explain that app.team.test and api.team.test resolve to Divyanshu's edge. Show dig from a client configured to use Aryan's DNS, the answer IP and TTL. Show LAN and resolver evidence.
@@ -13,6 +15,6 @@ Finish with each member prepared to answer questions about the entire request pa
 
 ## Command and Wireshark recording
 
-The replacement [5:00 video](../video/phase1-live-demo.mp4) uses playback of an actual timed command session and recordings of navigating the real Wireshark window. It contains subtitles and no audio. The earlier presentation-style video was removed.
+The replacement 5:00 video (historical local artifact) uses playback of an actual timed command session and recordings of navigating the real Wireshark window. It contains subtitles and no audio. The earlier presentation-style video was removed.
 
-Fresh commands showed working DNS and ping, Backend A 200, but Backend B and edge HTTPS timeouts. The Wireshark walkthrough uses the earlier successful 02:53 capture and is labeled accordingly. Complete deliberate wrong-record and backend-stop/recovery recordings remain unavailable. See [video notes](../video/README.md) and [subtitle file](../video/phase1-live-subtitles.srt).
+Fresh commands showed working DNS and ping, Backend A 200, but Backend B and edge HTTPS timeouts. The Wireshark walkthrough uses the earlier successful 02:53 capture and is labeled accordingly. Complete deliberate wrong-record and backend-stop/recovery recordings remain unavailable. See video notes (historical local artifact) and subtitle file (historical local artifact).

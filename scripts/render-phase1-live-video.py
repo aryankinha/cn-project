@@ -2,6 +2,13 @@
 """Render a genuine timed terminal capture plus recorded Wireshark UI frames.
 Requires Pillow and ffmpeg. Supply the raw UI folder as the first argument.
 """
+
+import sys
+
+if len(sys.argv) != 2 or sys.argv[1] in ("-h", "--help"):
+    sys.exit("Historical October video renderer. Supply its original UI "
+             "capture directory. Use scripts/phase2/capture.py for new evidence.")
+
 import json,re,sys,hashlib,tempfile,subprocess,shutil
 from pathlib import Path
 from PIL import Image,ImageDraw,ImageFont,ImageOps

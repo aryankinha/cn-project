@@ -24,3 +24,6 @@ video/
 team/.dns.lock
 team/.demo-state.json
 team/.operation.lock
+
+# Raw, timestamped operator logs. Publish reviewed evidence exports separately.
+evidence/phase2/*-*.log

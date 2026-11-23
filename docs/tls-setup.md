@@ -1,73 +1,22 @@
-# Phase I TLS certificate and nginx setup
+# Team TLS setup
 
-Owner: Divyanshu Singh (Mac 2, 10.7.20.249). Domains: `app.team.test` and `api.team.test`.
+The primary and standby edges serve the same team certificate for
+`app.team.test` and `api.team.test`. The deployment validates the configured
+certificate and key at `~/cn-project/tls/edge.crt` and
+`~/cn-project/tls/edge.key` on each edge. Edge owners provision these before a
+fresh deployment and keep the private key out of Git and release bundles.
 
-## Certificate created for this team
+Compare the public certificate fingerprint with the
+[verified live certificate](../evidence/phase2/tls-verification.txt). If a
+client needs trust configured, import only the matching public certificate
+through Keychain Access and enable SSL trust. Verify using ordinary curl:
 
-`tls/edge.crt` is an RSA-2048, SHA-256 self-signed server certificate with SANs for both domains, serverAuth usage and CA:FALSE. Validity is 5 October 2026 to 5 October 2027 in IST. `tls/edge.key` is its private key, mode 600 and ignored by Git. The certificate fingerprint is:
-
-```text
-CB:36:4B:3F:99:C1:D3:57:B3:7E:D7:5B:5B:93:B8:70:94:8F:8E:59:21:3F:BB:01:44:7C:80:2A:8E:13:B0:79
+```sh
+curl --http1.1 -fsS https://app.team.test/api/status
+curl --http1.1 -fsS https://api.team.test/api/status
 ```
 
-This follows the assignment's self-signed certificate option. There is no local CA to distribute. Trust the public server certificate explicitly on every test-client Mac. Never share the private key with the client Macs or upload it to GitHub.
-
-## Install on Divyanshu's Mac
-
-The team supplied the updated configuration running on Divyanshu's load-balancer Mac. Its certificate directory is `/Users/divyanshusingh/Desktop/Private-Network-Service-Platform-/tls/`, replacing the earlier `~/cn-tls/` instructions.
-
-```bash
-chmod 600 /Users/divyanshusingh/Desktop/Private-Network-Service-Platform-/tls/edge.key
-openssl x509 -in /Users/divyanshusingh/Desktop/Private-Network-Service-Platform-/tls/edge.crt -noout -subject -dates -ext subjectAltName -fingerprint -sha256
-```
-
-[The repository nginx config](../nginx/nginx.conf.template) now matches the supplied configuration: HTTP on 80 for app.team.test; HTTPS on 443 for both names; HTTP/2 enabled; TLS 1.2/1.3; and both round-robin backends. The certificate paths refer to Divyanshu's Mac, not Aryan's Mac. Include these blocks inside nginx's existing `http {}` context, for example `/opt/homebrew/etc/nginx/servers/cn-project.conf`. Preserve a copy of the existing configuration and replace project definitions rather than duplicating them. `nginx -T` remains the way to independently export the actual loaded configuration.
-
-```bash
-nginx -t
-sudo brew services restart nginx
-lsof -nP -iTCP:443 -sTCP:LISTEN
-```
-
-Use 8443 if binding 443 is unavailable; record the chosen port everywhere and include it in URLs. The prepared config uses 443. HTTP/2 is optional; do not claim it until negotiated in a real test.
-
-## Trust on each client Mac
-
-Share only `edge.crt`, compare its SHA-256 fingerprint above, then import it in Keychain Access. Open the certificate, expand Trust, and set it to Always Trust for SSL. macOS may require the user's administrator authentication. Do this on Aryan's Mac and each other Mac used as a client. This trust applies to this project's certificate.
-
-```bash
-curl -v https://app.team.test/api/status
-```
-
-The acceptance test must resolve using the team DNS and succeed without `-k`, with hostname/certificate validation enabled. As a separate diagnostic, `curl --cacert tls/edge.crt -v https://app.team.test/api/status` explicitly trusts the exact public certificate; this does not prove the browser/system trust-store setup is complete.
-
-## TLS packet evidence
-
-```bash
-curl --tlsv1.2 --tls-max 1.2 -v https://app.team.test/api/status
-```
-
-A fresh TLS 1.2 full handshake can expose Certificate and ChangeCipherSpec in the packet capture, as requested by Task G. Normal TLS 1.3 encrypts handshake messages after ServerHello, including Certificate; its compatibility ChangeCipherSpec is not key activation. Do not label encrypted TLS 1.3 records as visible certificates. Use the observed negotiated protocol and curl's certificate validation output. See [TLS 1.3 specification](https://www.rfc-editor.org/rfc/rfc8446) and [nginx upstream documentation](https://nginx.org/en/docs/http/ngx_http_upstream_module.html).
-
-## Recreate only if needed
-
-```bash
-umask 077
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-  -keyout tls/edge.key -out tls/edge.crt \
-  -subj '/O=CN Project Four Mac Team/CN=app.team.test' \
-  -addext 'subjectAltName=DNS:app.team.test,DNS:api.team.test' \
-  -addext 'basicConstraints=critical,CA:FALSE' \
-  -addext 'keyUsage=critical,digitalSignature,keyEncipherment' \
-  -addext 'extendedKeyUsage=serverAuth'
-```
-
-Regeneration changes the fingerprint and requires clients to trust the replacement certificate. Certificate generation alone does not mean TLS is deployed.
-
-## Latest live check — 5 October 2026
-
-Plain curl and the final smoke test now succeed from Aryan's Mac using default certificate trust, with hostname validation enabled. The edge presents the team's certificate; TLS 1.2 and TLS 1.3 both work, with HTTP/2 negotiated. Earlier exit-60 logs are historical setup evidence. Browser trust and the other Macs' trust stores have not been independently checked.
-
-See [final smoke output](../evidence/phase1/latest-smoke-test-2026-10-05.md) and [successful captured requests](../evidence/phase1/last-capture-requests-2026-10-05.md).
-
-The synchronized configuration passed [local nginx validation](../evidence/phase1/nginx-config-update-2026-10-05.md) with certificate paths substituted for local inspection.
+The [LAN capture](../evidence/phase2/README.md) contains a TLS 1.2 handshake
+with a visible Certificate message. The tracked `tls/edge.crt` is the
+historical Phase 1 certificate. Use the verified live certificate when
+testing or provisioning the integrated deployment.
