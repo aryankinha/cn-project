@@ -32,6 +32,9 @@ validate() {
         nginx -p "$home/" -c "$stage/nginx/validate.conf" -t
     fi
     if has backend; then
+        for profile in strict standby; do
+            /sbin/pfctl -a com.apple/cn-project-phase2 -nf "$stage/firewall/$profile.pf"
+        done
         venv="$home/backend/.venv"
         if [[ ! -x "$venv/bin/python" ]]; then python3 -m venv "$venv"; fi
         if ! "$venv/bin/python" -B -c 'from importlib.metadata import version; assert version("flask") == "3.0.3"'; then
