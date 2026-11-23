@@ -189,20 +189,25 @@ def failover(lab):
     finally:
         scope(lab, "mac3", "start", "backend")
         scope(lab, "mac3", "health", "backend")
-        reentry = time.monotonic() + 35
-        while time.monotonic() < reentry:
-            code, fields = headers(lab.https(lab.app, display=True))
-            require(code == 200 and fields.get("x-edge") == "edge1-mac2",
-                    "Request failed during the recovery observation")
-            if fields.get("x-backend") == "A":
-                print("Backend A rejoined the upstream pool")
-                break
-            time.sleep(1)
-        else:
-            raise RuntimeError("Backend A never rejoined the upstream pool")
+        wait_for_backends(lab, {"A"})
         series(lab, "edge1-mac2")
     output = lab.on("mac2", ("tail", "-n", "22", lab.runtime("mac2") / "logs/nginx-access.log"))
     print(output.stdout)
+
+
+def wait_for_backends(lab, expected):
+    pending = set(expected)
+    deadline = time.monotonic() + 35
+    while pending and time.monotonic() < deadline:
+        code, fields = headers(lab.https(lab.app, display=True))
+        require(code == 200 and fields.get("x-edge") == "edge1-mac2",
+                "Request failed during the recovery observation")
+        if fields.get("x-backend") in pending:
+            print(f"Backend {fields['x-backend']} rejoined the upstream pool")
+            pending.remove(fields["x-backend"])
+        elif pending:
+            time.sleep(1)
+    require(not pending, f"Failed to observe backend recovery for {sorted(pending)}")
 
 
 def cutover(lab):
@@ -271,7 +276,8 @@ def phase1_failures(lab, *, wrong_client=False):
     finally:
         for node in ("mac4", "mac3"):
             scope(lab, node, "start", "backend")
-        time.sleep(11)
+        time.sleep(10)
+        wait_for_backends(lab, {"A", "B"})
         smoke(lab)
     require(diagnose(lab, port=65534) == "TCP", "Wrong-port check did not fail at TCP")
     require(diagnose(lab) is None, "Normal service did not recover")

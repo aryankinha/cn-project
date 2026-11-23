@@ -30,6 +30,14 @@ def smoke(lab):
     for source in ("mac1", "mac4"):
         status, fields = headers(lab.https(lab.api, source=source, display=True))
         require(status == 200 and fields.get("x-edge") == "edge1-mac2", f"{source} API path failed")
+    for node in ("mac2", "mac3"):
+        for hostname in (lab.app, lab.api):
+            response = lab.on("mac1", ("curl", "--noproxy", "*", "-sS", "--max-time", "5",
+                "--resolve", f"{hostname}:80:{lab.ips[node]}", "-D", "-", "-o", "/dev/null",
+                f"http://{hostname}/"), display=True)
+            code, fields = headers(response)
+            require(code == 301 and fields.get("location") == f"https://{hostname}/",
+                    f"HTTP redirect mismatch for {node}/{hostname}")
     status, fields = headers(lab.https(lab.app, path="/api/cache", display=True))
     tag = fields.get("etag")
     require(status == 200 and tag and "max-age=60" in fields.get("cache-control", ""), "Missing cache headers")
