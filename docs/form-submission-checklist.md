@@ -13,7 +13,7 @@ report, and indexed evidence available during the evaluation.
 | Phase 2 A and B | [Backup DNS](../evidence/phase2/extension-a.txt), [TTL and manual flush](../evidence/phase2/extension-b-manual-flush.txt) | Passed with verified recovery. |
 | Phase 2 C | [Isolation instructions and evidence](../evidence/phase2/README.md) | The current direct probes still reached both backend ports from Mac 1. Run the owner-assisted deny/allow/rollback demonstration and save the results. |
 | Phase 2 D, E and F | [Evidence index](../evidence/phase2/README.md) | Backend failover, DNS cutover with recovery, and troubleshooting passed. Repeat the standby path with the authorized firewall profile during the joint C/E check. |
-| Final report and presentation | [Final report](phase2-report.md), [demo sequence](demo-commands.md), [viva preparation](viva-preparation.md) | Materials are indexed. Each member participates and answers viva questions. |
+| Final report and presentation | [Final report (PDF)](report/project-report.pdf), [submission index](submission.md), [demo sequence](demo-commands.md), [viva preparation](viva-preparation.md) | Materials are indexed. Each member participates and answers viva questions. |
 
 Use the [runbook](phase2-runbook.md) to collect any outstanding evidence
 before marking the corresponding row complete on the submission form.

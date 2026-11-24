@@ -81,7 +81,7 @@ team TLS files on a fresh edge first. For the already running lab,
 
 ## Submission material
 
-- [Final report](docs/phase2-report.md) and [evidence index](evidence/phase2/README.md)
+- [IEEE report (PDF)](docs/report/project-report.pdf) · [LaTeX source](docs/report/project-report.tex) · [Submission and evidence index](docs/submission.md)
 - [Phase 1 failure drills](docs/phase1-failure-tests.md) and [historical Phase 1 evidence](evidence/phase1/README.md)
 - [TLS setup](docs/tls-setup.md), [troubleshooting](docs/troubleshooting.md), and [viva preparation](docs/viva-preparation.md)
 
